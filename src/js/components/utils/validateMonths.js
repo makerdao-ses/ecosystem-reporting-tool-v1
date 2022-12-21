@@ -82,8 +82,7 @@ const addBudgetStatementToApi = async (months) => {
                 cuId: coreUnit.id,
                 cuCode: coreUnit.code,
                 month: month,
-                budgetStatus: 'Draft',
-                publicationUrl: ''
+                status: 'Draft'
             }
             rows.push(row)
         }

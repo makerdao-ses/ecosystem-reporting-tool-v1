@@ -38,7 +38,7 @@ export default function BudgetSheet() {
 
     return (
         <Container>
-            {gAuth && userFromStore ? <Table /> : <NotAuthenticated />}
+            {gAuth && userFromStore.id !== '' ? <Table /> : <NotAuthenticated />}
         </Container>
     )
 }

@@ -34,7 +34,7 @@ export default async function processData(rawData, wallet) {
     for (const [key, value] of Object.entries(actualsByMonth)) {
         actualsByMonth[key].forEach(objType => {
             for (const [key1, value1] of Object.entries(objType)) {
-                if (value1 !== 'actual' && value1 !== 'owed' && value1 !== 'forecast' && value1 !== 'paid') {
+                if (value1 !== 'actual' && value1 !== 'owed' && value1 !== 'forecast' && value1 !== 'paid' && value1 !== 'estimate' && value1 !== 'difference') {
                     objType[key1] = value1 * Math.sign(value1)
                 }
                 if (key1.toLowerCase() === 'revenue') {

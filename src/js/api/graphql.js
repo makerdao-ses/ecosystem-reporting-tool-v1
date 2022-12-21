@@ -18,6 +18,7 @@ async function setupClient() {
                 :
                 isDev === false && isStaging === true && 'https://staging-ecosystem-dashboard.herokuapp.com/graphql'
         ,
+        // uri: 'http://localhost:4000/graphql',
         cache: new InMemoryCache()
     });
 }
@@ -383,10 +384,11 @@ export const getBudgetStatementComments = async (budgetStatementId) => {
                         budgetStatementId
                         timestamp
                         comment
-                        commentAuthor {
-                        id
-                        name
+                        author {
+                            id
+                            username
                         }
+                        status
                     }
                 }
             `,
@@ -413,10 +415,10 @@ export const createBudgetStatementComment = async (comment, authToken) => {
                         budgetStatementId
                         timestamp
                         comment
-                        commentAuthor {
-                        id
-                        name
-                    }
+                        author{
+                            id
+                            username
+                        }
                 }
             }
             `,
@@ -435,3 +437,27 @@ export const createBudgetStatementComment = async (comment, authToken) => {
         console.error(error)
     }
 };
+
+export const getUsers = async (userId) => {
+    try {
+        const result = client.query({
+            query: gql`
+                query Users($input: UsersFilter) {
+                    users(input: $input) {
+                        id
+                        username
+                    }
+                }
+            `,
+            variables: {
+                input: {
+                    id: userId? userId : null
+                }
+            }
+        });
+        return result;
+    } catch (error) {
+        console.error(error)
+    }
+
+}

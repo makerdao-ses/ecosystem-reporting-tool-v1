@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0](https://github.com/liberuum/budget-tool/releases/tag/v1.4.0) - 2022-12-01
+
+### Changed
+
+- **Breaking change**: users need to get latest version of budgtet tool in order to log in. User log in object is changed from API
+
+- General fixes and improvements
+
 ## [1.3.0](https://github.com/liberuum/budget-tool/releases/tag/v1.3.0) - 2022-11-03
 
 ### Added

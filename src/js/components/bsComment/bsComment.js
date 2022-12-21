@@ -4,9 +4,9 @@ import { useSnackbar } from 'notistack';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm';
 import { useSelector } from 'react-redux';
-import { getBudgetStatementComments, createBudgetStatementComment } from '../../api/graphql';
+import { getBudgetStatementComments, createBudgetStatementComment, getUsers } from '../../api/graphql';
 
-export default function BudgetStatementComment({ budgetStatementId }) {
+export default function BudgetStatementComment({ budgetStatementId, users }) {
 
     const userFromStore = useSelector(store => store.user);
 
@@ -22,11 +22,11 @@ export default function BudgetStatementComment({ budgetStatementId }) {
 
     const getComments = async () => {
         if (budgetStatementId !== undefined) {
-            try{
+            try {
                 const result = await getBudgetStatementComments(budgetStatementId);
                 setComments(result.data.budgetStatementComment)
                 enqueueSnackbar(`Comments fetched`, { variant: 'success' })
-            }catch(error) {
+            } catch (error) {
                 enqueueSnackbar(error, { variant: 'error' })
             }
         }
@@ -37,13 +37,14 @@ export default function BudgetStatementComment({ budgetStatementId }) {
             const commentObj = {
                 budgetStatementId,
                 comment: inputText,
-                commentAuthorName: userFromStore.username
+                commentAuthorId: userFromStore.id
             }
             const result = await createBudgetStatementComment(commentObj, userFromStore.authToken)
             setComments(prev => [...prev, result.data.budgetStatementCommentCreate[0]])
             setInputText('')
             setPreview(false)
             enqueueSnackbar('Added new expense comment', { variant: 'success' })
+
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' })
         }
@@ -52,6 +53,7 @@ export default function BudgetStatementComment({ budgetStatementId }) {
     const handlePreview = () => {
         setPreview(!preview)
     }
+
 
     return (
         <>{comments.length < 1 ?
@@ -66,7 +68,8 @@ export default function BudgetStatementComment({ budgetStatementId }) {
                             <Grid
                                 columns={[2, '2fr 0.1fr']}
                             >
-                                <Text sx={{ fontWeight: 'bold' }}>{obj.commentAuthor[0]?.name} wrote on {`${obj.timestamp?.substring(0, 10)} ${obj.timestamp?.substring(11, 16)} UTC`}</Text>
+                                <Text sx={{ fontWeight: 'bold' }}>{obj.author.username} wrote on {`${obj.timestamp?.substring(0, 10)} 
+                                ${obj.timestamp?.substring(11, 16)} UTC`} - {`${obj.status}`}</Text>
                                 {/* <Text sx={{position: 'right', color: 'red', cursor: 'pointer'}}>Delete</Text> */}
                             </Grid>
                             <ReactMarkdown children={obj.comment} remarkPlugins={[remarkGfm]} />

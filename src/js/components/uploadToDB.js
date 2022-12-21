@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forceUpdate } from 'react';
 import { Card, Label, Badge, Link, Grid, Button, Spinner } from "theme-ui"
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { getCoreUnit, getBudgetSatementInfo, deleteBudgetLineItems } from '../api/graphql';
+import { getCoreUnit, getBudgetSatementInfo, deleteBudgetLineItems, getUsers } from '../api/graphql';
 import { validateMonthsInApi } from './utils/validateMonths';
 import { validateLineItems, getCanonicalCategory } from './utils/validateLineItems'
 import { useSelector } from 'react-redux';
@@ -26,14 +26,21 @@ export default function UploadToDB(props) {
     const [coreUnit, setCoreUnit] = useState();
     const [walletIds, setWalletIds] = useState()
     const [walletId, setWalletId] = useState();
+    const [users, setUsers] = useState([]);
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     useEffect(() => {
+        fetchUsers()
         parseDataForApi()
         fetchCoreUnit()
         handleMonthChange()
-    }, [fetchCoreUnit, parseDataForApi, lineItems, selectedMonth, walletId])
+    }, [fetchCoreUnit, parseDataForApi, lineItems, selectedMonth, walletId]);
+
+    const fetchUsers = async () => {
+        const result = await getUsers();
+        setUsers(result.data.users)
+    }
 
     const ADD_BUDGET_LINE_ITEMS = gql`
         mutation budgetLineItemsBatchAdd($input: [LineItemsBatchAddInput]) {
@@ -258,7 +265,7 @@ export default function UploadToDB(props) {
     return (
         <>
             <FTE month={`${selectedMonth}-01`} budgetStatementId={currentBudgetId} coreUnit={coreUnit} />
-            <BudgetStatementComment budgetStatementId={currentBudgetId ? currentBudgetId : undefined} />
+            <BudgetStatementComment budgetStatementId={currentBudgetId ? currentBudgetId : undefined} users={users} />
             <Grid
                 columns={2}
             >
