@@ -7,11 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.5.0) - 2022-12-21
+
+### Changed
+
+- **Breaking change**: users need to get latest version of budget tool in order to properly use the tool's comment features.
+
+- General fixes and improvements
+
+- **Moved budget tool to new repo location.** Moving forward, the tool releases will happen at [makerdao-ses releases.](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases)
+
 ## [1.4.0](https://github.com/liberuum/budget-tool/releases/tag/v1.4.0) - 2022-12-01
 
 ### Changed
 
-- **Breaking change**: users need to get latest version of budgtet tool in order to log in. User log in object is changed from API
+- **Breaking change**: users need to get latest version of budget tool in order to log in. User log in object is changed from API
 
 - General fixes and improvements
 
@@ -23,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking change**: users need to get latest version of budgtet tool in order to log in. User log in object is changed from API
+- **Breaking change**: users need to get latest version of budget tool in order to log in. User log in object is changed from API
 
 - General fixes and improvements
 
