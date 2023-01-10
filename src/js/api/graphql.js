@@ -69,6 +69,10 @@ export const getCoreUnit = async (id) => {
                         code
                         name
                         shortCode
+                        auditors {
+                            id
+                            username
+                        }
                     }
                 }
             `,
@@ -451,7 +455,7 @@ export const getUsers = async (userId) => {
             `,
             variables: {
                 input: {
-                    id: userId? userId : null
+                    id: userId ? userId : null
                 }
             }
         });

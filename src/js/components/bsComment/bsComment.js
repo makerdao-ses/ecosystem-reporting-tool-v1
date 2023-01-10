@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Textarea, Label, Input, Grid, Text, Button, Spinner, Box } from "theme-ui";
+import { Card, Textarea, Select, Grid, Text, Button, Box } from "theme-ui";
 import { useSnackbar } from 'notistack';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm';
 import { useSelector } from 'react-redux';
-import { getBudgetStatementComments, createBudgetStatementComment, getUsers } from '../../api/graphql';
+import { getBudgetStatementComments, createBudgetStatementComment, getCoreUnit } from '../../api/graphql';
 
 export default function BudgetStatementComment({ budgetStatementId, users }) {
 
@@ -13,31 +13,49 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
     const [inputText, setInputText] = useState('');
     const [comments, setComments] = useState([])
     const [preview, setPreview] = useState(false)
+    const [withAuditor, setWithAuditor] = useState(false);
+    const [status, setStatus] = useState();
+    const [editStatus, setEditStatus] = useState(false);
 
     const { enqueueSnackbar } = useSnackbar()
     useEffect(() => {
-
         getComments()
+        getAuditors()
     }, [budgetStatementId])
 
     const getComments = async () => {
         if (budgetStatementId !== undefined) {
             try {
                 const result = await getBudgetStatementComments(budgetStatementId);
-                setComments(result.data.budgetStatementComment)
+                const fetchedComments = result.data.budgetStatementComment;
+                setComments(fetchedComments)
+                if (fetchedComments.length < 1) {
+                    setStatus('Draft')
+                } else {
+                    setStatus(fetchedComments[fetchedComments.length - 1].status)
+                }
                 enqueueSnackbar(`Comments fetched`, { variant: 'success' })
             } catch (error) {
                 enqueueSnackbar(error, { variant: 'error' })
             }
         }
     };
+    const getAuditors = async () => {
+        if (userFromStore.cuId !== '') {
+            const cu = await getCoreUnit(userFromStore.cuId);
+            if (cu.data.coreUnit[0].auditors.length > 0) {
+                setWithAuditor(true)
+            }
+        }
+    }
 
     const handleSubmit = async () => {
         try {
             const commentObj = {
                 budgetStatementId,
                 comment: inputText,
-                commentAuthorId: userFromStore.id
+                commentAuthorId: userFromStore.id,
+                status
             }
             const result = await createBudgetStatementComment(commentObj, userFromStore.authToken)
             setComments(prev => [...prev, result.data.budgetStatementCommentCreate[0]])
@@ -54,6 +72,20 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
         setPreview(!preview)
     }
 
+    const handleSelect = (value) => {
+        setStatus(value)
+    }
+
+    const handleEditStatus = () => {
+        setStatus('Draft')
+        setInputText(' ')
+        setEditStatus(prevStatus => {
+            if(prevStatus) {
+                setInputText('')
+            }
+            return !prevStatus
+        })
+    }
 
     return (
         <>{comments.length < 1 ?
@@ -102,11 +134,30 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
                         >Preview</Button>
                         : <div></div>
                     }
-                    <Button
-                        variant="smallOutline"
-                        onClick={handleSubmit}
-                        disabled={!inputText}
-                    >Submit</Button>
+                    <div>
+                        <Grid
+                            columns={3}
+                        >
+                            <Button
+                                variant="smallOutline"
+                                onClick={handleEditStatus}
+                            > Set status </Button>
+                            <Select disabled={!editStatus} size={'small'} onChange={e => handleSelect(e.target.value)} defaultValue={'Draft'}>
+                                <option>Draft</option>
+                                {
+                                    withAuditor ?
+                                        <option>Review</option>
+                                        :
+                                        <option>Final</option>
+                                }
+                            </Select>
+                            <Button
+                                variant="smallOutline"
+                                onClick={handleSubmit}
+                                disabled={!inputText}
+                            >Submit</Button>
+                        </Grid>
+                    </div>
                 </Grid>
             </Card>
         </>
