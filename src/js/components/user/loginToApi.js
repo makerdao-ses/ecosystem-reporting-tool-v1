@@ -64,6 +64,7 @@ export default function LoginToApi() {
         try {
             const result = await userLogin()
             let cuId = undefined;
+            let manyCuIds = [];
             const roles = extractRoleInfo(result);
             if (roles.length < 1) {
                 enqueueSnackbar('Cannot use tool without having assinged a CU id to your account', { variant: 'error' })
@@ -71,15 +72,20 @@ export default function LoginToApi() {
             roles.map(role => {
                 if (role.name === facilitatorRole) {
                     cuId = role.cuId
+                    manyCuIds.push(role.cuId);
                 }
                 if (role.name === superAdminRole) {
                     cuId = null
                 }
             })
+            if (manyCuIds.length > 1) {
+                cuId = manyCuIds;
+            }
             if (cuId !== undefined && roles.length > 0) {
                 dispatch(storeUserInfo({
                     id: result.data.userLogin.user.id,
                     cuId,
+                    cuIds: cuId,
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
                     roles: roles
@@ -87,6 +93,7 @@ export default function LoginToApi() {
                 electron.saveApiCredentials({
                     id: result.data.userLogin.user.id,
                     cuId,
+                    cuIds: cuId,
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
                     roles: roles

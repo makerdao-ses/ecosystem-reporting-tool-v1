@@ -4,6 +4,7 @@ import { useQuery, gql, useMutation } from "@apollo/client";
 import { GET_CORE_UNIT, getCoreUnits } from '../api/graphql';
 import { useDispatch, useSelector } from 'react-redux';
 import { storeListIndex } from '../actions/user';
+import { isArray } from '@apollo/client/cache/inmemory/helpers';
 
 export default function CuInfo() {
     const dispatch = useDispatch();
@@ -11,7 +12,6 @@ export default function CuInfo() {
     const userFromStore = useSelector(store => store.user);
     const [cus, setCus] = useState([]);
     const [adminRole, setAdminRole] = useState(false);
-
 
     useEffect(() => {
         const admin = setRole();
@@ -25,7 +25,7 @@ export default function CuInfo() {
                     cuId: result.data.coreUnits[0].id
                 }));
             } else {
-                const sortedCus = moveInArray(result.data.coreUnits, userFromStore.cuListIndex, 0);
+                let sortedCus = moveInArray(result.data.coreUnits, userFromStore.cuListIndex, 0);
                 dispatch(storeListIndex({
                     cuListIndex: 0,
                     cuId: sortedCus[0].id
@@ -34,16 +34,41 @@ export default function CuInfo() {
             }
 
         };
-        if (admin === true) {
+        const getCusForFacilitator = async () => {
+            const result = await getCoreUnits();
+            let sortedCus = moveInArray(result.data.coreUnits, userFromStore.cuListIndex, 0);
+            if (isArray(userFromStore.cuIds)) {
+                const filteredCus = [];
+                userFromStore.cuIds.forEach(cuId => {
+                    sortedCus.filter(cu => {
+                        if (cu.id == cuId) {
+                            filteredCus.push(cu)
+                        }
+                    })
+                });
+                sortedCus = filteredCus;
+            }
+            dispatch(storeListIndex({
+                cuListIndex: 0,
+                cuId: sortedCus[0].id
+            }));
+            setCus(sortedCus)
+        }
+        if (admin === 'admin') {
             getCus()
+        } else if (admin === 'facilitator' && isArray(userFromStore.cuIds)) {
+            getCusForFacilitator()
         }
     }, []);
 
     const setRole = () => {
         const [admin] = userFromStore.roles.map(role => {
             if (role.name === 'SuperAdmin') {
-                return true
-            } else {
+                return 'admin'
+            } else if (role.name === 'CoreUnitFacilitator') {
+                return 'facilitator'
+            }
+            else {
                 return false
             }
         })
@@ -91,26 +116,27 @@ export default function CuInfo() {
             </Card>
         )
     }
-    else if (adminRole) {
-        return (
-            <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
-                <Label>Choose CoreUnit</Label>
-                <Select onChange={e => handleSelect(e.target.value)}>
-                    {
-                        cus.map(cu => {
-                            return <option key={cu.id}>{`${cu.name}`}</option>
-                        })
-                    }
-                </Select>
-            </Card>
-        )
-    }
-    else {
-        return (
-            <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
-                <Text sx={{ fontWeight: "bold", }}>{data.coreUnit[0]?.name} Core Unit</Text>
-            </Card>
-        )
+    else if (adminRole == 'facilitator' || adminRole == 'admin') {
+        if (cus.length > 0) {
+            return (
+                <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
+                    <Label>Choose CoreUnit</Label>
+                    <Select onChange={e => handleSelect(e.target.value)}>
+                        {
+                            cus.map(cu => {
+                                return <option key={cu.id}>{`${cu.name}`}</option>
+                            })
+                        }
+                    </Select>
+                </Card>
+            )
+        } else if (cus.length === 0) {
+            return (
+                <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
+                    <Text sx={{ fontWeight: "bold", }}>{data.coreUnit[0]?.name} Core Unit</Text>
+                </Card>
+            )
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
     id: '',
     cuId: '',
+    cuIds: '',
     username: '',
     authToken: '',
     auth: false,
@@ -15,6 +16,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 ...state,
                 id: action.userData.id,
                 cuId: action.userData.cuId,
+                cuIds: action.userData.cuIds,
                 username: action.userData.username,
                 authToken: action.userData.authToken,
                 auth: true,
@@ -25,6 +27,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 ...state,
                 id: '',
                 cuId: '',
+                cuIds: '',
                 username: '',
                 authToken: '',
                 auth: false,
