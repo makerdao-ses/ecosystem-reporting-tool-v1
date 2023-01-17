@@ -2,30 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Card, Label, Input, Grid, Text, Button, Spinner, Box } from "theme-ui";
 import { gql, useMutation } from "@apollo/client";
 import { useSelector } from 'react-redux';
-import { getFte } from '../../api/graphql';
 import { useSnackbar } from 'notistack';
 
-export default function FTE({ month, budgetStatementId, coreUnit }) {
+export default function FTE({ month, budgetStatement, coreUnit }) {
     const userFromStore = useSelector(store => store.user)
     const [fte, setFte] = useState('')
     const [apiFte, setApiFte] = useState(null)
     const [readToUpload, setReadyToUpload] = useState(false);
 
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        const fetchFTE = async () => {
-            const result = await getFte(parseFloat(budgetStatementId))
-            if (result.data.budgetStatementFTE.length > 0) {
-                setFte(`${result.data.budgetStatementFTE[0].ftes}`)
-                setApiFte(result.data.budgetStatementFTE[0])
+        if (budgetStatement.budgetStatementFTEs !== undefined) {
+            if (budgetStatement.budgetStatementFTEs.length > 0) {
+                setFte(`${budgetStatement.budgetStatementFTEs[0].ftes}`)
+                setApiFte(budgetStatement.budgetStatementFTEs[0])
             } else {
                 setApiFte(null)
                 setFte('')
             }
         }
-        fetchFTE();
-    }, [budgetStatementId, month])
+    }, [budgetStatement, month])
 
     const handleChange = (value) => {
         setFte(value)
@@ -77,7 +74,7 @@ export default function FTE({ month, budgetStatementId, coreUnit }) {
     const [addFte, { data, loading, error }] = useMutation(ADD_FTE, {
         variables: {
             input: {
-                budgetStatementId,
+                budgetStatementId: budgetStatement.id,
                 month,
                 ftes: parseFloat(fte),
                 coreUnitId: parseFloat(userFromStore.cuId)
@@ -95,7 +92,7 @@ export default function FTE({ month, budgetStatementId, coreUnit }) {
         variables: {
             input: {
                 id: apiFte?.id,
-                budgetStatementId,
+                budgetStatementId: budgetStatement.id,
                 month,
                 ftes: parseFloat(fte),
                 coreUnitId: parseFloat(userFromStore.cuId)

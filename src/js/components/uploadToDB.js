@@ -20,7 +20,7 @@ export default function UploadToDB(props) {
     const userFromStore = useSelector(store => store.user)
     const { walletName, walletAddress, actualsByMonth, selectedMonth, leveledMonthsByCategory } = props.props;
     const [uploadStatus, setUploadStatus] = useState({ updatingDb: false, noChange: false, overriding: false, uploading: false })
-    const [currentBudgetId, setCurrentBudgetId] = useState('')
+    const [currentBudget, setcurrentBudget] = useState('')
 
     const [lineItems, setLineItems] = useState([])
     const [coreUnit, setCoreUnit] = useState();
@@ -65,10 +65,10 @@ export default function UploadToDB(props) {
         setCoreUnit(rawCoreUnit.data.coreUnit[0])
         const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnit[0].id)
         const budgetStatements = rawBudgetStatements.data.budgetStatement;
-        const [selectedBudgetId] = budgetStatements.filter(b => {
+        const [selectedBudget] = budgetStatements.filter(b => {
             return b.month === selectedMonth.concat('-01')
         })
-        setCurrentBudgetId(selectedBudgetId?.id)
+        setcurrentBudget(selectedBudget)
         const idsWallets = await validateMonthsInApi(budgetStatements, getAllMonths(), rawCoreUnit.data.coreUnit[0], walletAddress, walletName, lineItems, userFromStore.authToken);
         setWalletIds(idsWallets);
         const wallet = idsWallets.find((wallet) => {
@@ -264,8 +264,8 @@ export default function UploadToDB(props) {
 
     return (
         <>
-            <FTE month={`${selectedMonth}-01`} budgetStatementId={currentBudgetId} coreUnit={coreUnit} />
-            <BudgetStatementComment budgetStatementId={currentBudgetId ? currentBudgetId : undefined} users={users} />
+            <FTE month={`${selectedMonth}-01`} budgetStatement={currentBudget} coreUnit={coreUnit} />
+            <BudgetStatementComment budgetStatementId={currentBudget ? currentBudget.id : undefined} users={users} />
             <Grid
                 columns={2}
             >
