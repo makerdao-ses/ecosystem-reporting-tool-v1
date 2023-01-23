@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Label, Container, Textarea, Select, Button, Spinner, Text } from "theme-ui"
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { Card, Label, Select, Spinner, Text } from "theme-ui"
+import { useQuery } from "@apollo/client";
 import { GET_CORE_UNIT, getCoreUnits } from '../api/graphql';
 import { useDispatch, useSelector } from 'react-redux';
 import { storeListIndex } from '../actions/user';
@@ -109,7 +109,7 @@ export default function CuInfo() {
             </Card>
         )
     }
-    else if (data == undefined || data.coreUnit.length < 1 && userFromStore.cuId !== null) {
+    else if (data === undefined || data.coreUnits.length < 1 && userFromStore.cuId !== null) {
         return (
             <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
                 <Text sx={{ fontWeight: "bold", color: 'red' }}> NO CU FOUND</Text>
@@ -133,7 +133,7 @@ export default function CuInfo() {
         } else if (cus.length === 0) {
             return (
                 <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
-                    <Text sx={{ fontWeight: "bold", }}>{data.coreUnit[0]?.name} Core Unit</Text>
+                    <Text sx={{ fontWeight: "bold", }}>{data.coreUnits[0]?.name} Core Unit</Text>
                 </Card>
             )
         }

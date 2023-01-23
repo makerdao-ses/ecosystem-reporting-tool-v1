@@ -50,8 +50,8 @@ export async function getCoreUnits() {
 }
 
 export const GET_CORE_UNIT = gql`
-    query getCoreUnit($filter: CoreUnitFilter) {
-     coreUnit(filter: $filter) {
+    query getCoreUnits($filter: CoreUnitFilter) {
+     coreUnits(filter: $filter) {
         id
         code
         name
@@ -64,7 +64,7 @@ export const getCoreUnit = async (id) => {
         const cu = client.query({
             query: gql`
                 query getCoreUnit($filter: CoreUnitFilter){
-                    coreUnit(filter: $filter) {
+                    coreUnits(filter: $filter) {
                         id
                         code
                         name
@@ -94,7 +94,7 @@ export const getBudgetSatementInfo = async (cuId) => {
         const budgetStatements = client.query({
             query: gql`
                 query BudgetStatement($filter: BudgetStatementFilter) {
-                    budgetStatement(filter: $filter) {
+                    budgetStatements(filter: $filter) {
                         id
                         cuId
                         month
@@ -285,7 +285,7 @@ export const getBudgetLineItems = async (walletId, month) => {
             const result = client.query({
                 query: gql`
                     query BudgetStatementLineItem($filter: BudgetStatementLineItemFilter) {
-                        budgetStatementLineItem(filter: $filter) {
+                        budgetStatementLineItems(filter: $filter) {
                             id
                             budgetStatementWalletId
                             month
@@ -312,7 +312,7 @@ export const getBudgetLineItems = async (walletId, month) => {
             const result = client.query({
                 query: gql`
                     query BudgetStatementLineItem($filter: BudgetStatementLineItemFilter) {
-                        budgetStatementLineItem(filter: $filter) {
+                        budgetStatementLineItems(filter: $filter) {
                             id
                             budgetStatementWalletId
                             month
@@ -363,7 +363,7 @@ export const getBudgetStatementComments = async (budgetStatementId) => {
         const result = client.query({
             query: gql`
                 query BudgetStatementComments($filter: BudgetStatementCommentFilter) {
-                    budgetStatementComment(filter: $filter) {
+                    budgetStatementComments(filter: $filter) {
                         id
                         budgetStatementId
                         timestamp

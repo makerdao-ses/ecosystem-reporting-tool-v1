@@ -62,14 +62,14 @@ export default function UploadToDB(props) {
 
     const fetchCoreUnit = async () => {
         const rawCoreUnit = await getCoreUnit(userFromStore.cuId)
-        setCoreUnit(rawCoreUnit.data.coreUnit[0])
-        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnit[0].id)
-        const budgetStatements = rawBudgetStatements.data.budgetStatement;
+        setCoreUnit(rawCoreUnit.data.coreUnits[0])
+        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnits[0].id)
+        const budgetStatements = rawBudgetStatements.data.budgetStatements;
         const [selectedBudget] = budgetStatements.filter(b => {
             return b.month === selectedMonth.concat('-01')
         })
         setcurrentBudget(selectedBudget)
-        const idsWallets = await validateMonthsInApi(budgetStatements, getAllMonths(), rawCoreUnit.data.coreUnit[0], walletAddress, walletName, lineItems, userFromStore.authToken);
+        const idsWallets = await validateMonthsInApi(budgetStatements, getAllMonths(), rawCoreUnit.data.coreUnits[0], walletAddress, walletName, lineItems, userFromStore.authToken);
         setWalletIds(idsWallets);
         const wallet = idsWallets.find((wallet) => {
             if (wallet.month === `${selectedMonth}-01`) {

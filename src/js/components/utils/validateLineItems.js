@@ -22,7 +22,7 @@ export const validateLineItems = async (selectedLineItems) => {
         //Checking lineItems per month (walletId)
 
         const rawApiLineItems = await getBudgetLineItems(uniqueWalletIds[0]);
-        const apiLineItems = rawApiLineItems.data.budgetStatementLineItem
+        const apiLineItems = rawApiLineItems.data.budgetStatementLineItems
 
         if (apiLineItems.length > 0) {
             lineItemsToDelete = apiLineItems.map(item => {

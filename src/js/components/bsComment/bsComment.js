@@ -27,7 +27,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
         if (budgetStatementId !== undefined) {
             try {
                 const result = await getBudgetStatementComments(budgetStatementId);
-                const fetchedComments = result.data.budgetStatementComment;
+                const fetchedComments = result.data.budgetStatementComments;
                 setComments(fetchedComments)
                 if (fetchedComments.length < 1) {
                     setStatus('Draft')
@@ -43,7 +43,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
     const getAuditors = async () => {
         if (userFromStore.cuId !== '') {
             const cu = await getCoreUnit(userFromStore.cuId);
-            if (cu.data.coreUnit[0].auditors.length > 0) {
+            if (cu.data.coreUnits[0].auditors.length > 0) {
                 setWithAuditor(true)
             }
         }
