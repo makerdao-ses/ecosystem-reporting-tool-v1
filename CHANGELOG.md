@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.6.0) - 2022-02-09
+
+### Changed
+
+- **Breaking change**: users need to get latest version of budget tool in order to being able to log in
+
+- General fixes and improvements
+
 ## [1.5.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.5.0) - 2022-12-21
 
 ### Changed
