@@ -89,14 +89,14 @@ export const getCoreUnit = async (id) => {
     }
 }
 
-export const getBudgetSatementInfo = async (cuId) => {
+export const getBudgetSatementInfo = async (ownerId) => {
     try {
         const budgetStatements = client.query({
             query: gql`
                 query BudgetStatement($filter: BudgetStatementFilter) {
                     budgetStatements(filter: $filter) {
                         id
-                        cuId
+                        ownerId
                         month
                         budgetStatementWallet {
                             id
@@ -125,7 +125,7 @@ export const getBudgetSatementInfo = async (cuId) => {
             `,
             variables: {
                 filter: {
-                    cuId
+                    ownerId
                 }
             },
             fetchPolicy: 'no-cache'
@@ -144,7 +144,7 @@ export const addBudgetStatements = async (budgetStatements, authToken) => {
                 mutation BudgetStatementsBatchAdd($input: [BudgetStatementBatchAddInput]) {
                     budgetStatementsBatchAdd(input: $input) {
                             id
-                            cuId
+                            ownerId
                             month
                             budgetStatementWallet {
                                 id
