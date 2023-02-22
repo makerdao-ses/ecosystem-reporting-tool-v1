@@ -125,7 +125,8 @@ export const getBudgetSatementInfo = async (ownerId) => {
             `,
             variables: {
                 filter: {
-                    ownerId
+                    ownerId,
+                    ownerType: 'CoreUnit'
                 }
             },
             fetchPolicy: 'no-cache'
