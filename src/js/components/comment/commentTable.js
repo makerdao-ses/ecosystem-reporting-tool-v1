@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { updateBudgetLineItem, updateBudgetLineItems } from '../../api/graphql';
 import { useSnackbar } from 'notistack';
 
-export default function CommentTable({ walletId, month }) {
+export default function CommentTable({ walletId, month, ownerType }) {
     const userFromStore = useSelector(store => store.user)
 
     const [lineItems, setLineItems] = useState([]);
@@ -69,7 +69,7 @@ export default function CommentTable({ walletId, month }) {
             return { ...item }
         })
         try {
-            itemsToUpdate.push({ cuId: userFromStore.cuId })
+            itemsToUpdate.push({ cuId: userFromStore.cuId, ownerType })
             const result = await updateBudgetLineItems(itemsToUpdate, userFromStore.authToken);
             enqueueSnackbar(`Updated ${result.data.budgetLineItemsBatchUpdate.length} Comments `, { variant: 'success' })
         } catch (error) {

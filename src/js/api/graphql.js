@@ -89,7 +89,7 @@ export const getCoreUnit = async (id) => {
     }
 }
 
-export const getBudgetSatementInfo = async (ownerId) => {
+export const getBudgetSatementInfo = async (ownerId, ownerType) => {
     try {
         const budgetStatements = client.query({
             query: gql`
@@ -98,6 +98,7 @@ export const getBudgetSatementInfo = async (ownerId) => {
                         id
                         ownerId
                         month
+                        ownerType
                         budgetStatementWallet {
                             id
                             name
@@ -126,7 +127,7 @@ export const getBudgetSatementInfo = async (ownerId) => {
             variables: {
                 filter: {
                     ownerId,
-                    ownerType: 'CoreUnit'
+                    ownerType
                 }
             },
             fetchPolicy: 'no-cache'
@@ -147,6 +148,7 @@ export const addBudgetStatements = async (budgetStatements, authToken) => {
                             id
                             ownerId
                             month
+                            ownerType
                             budgetStatementWallet {
                                 id
                                 name

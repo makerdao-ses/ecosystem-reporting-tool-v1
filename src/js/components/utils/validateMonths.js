@@ -6,19 +6,21 @@ let coreUnit;
 let walletAddress;
 let walletName;
 let token;
+let ownerType;
 
 /**
  *  Set DEBUG_UPLOAD = false to suppress debug output.
  */
 const DEBUG_UPLOAD = false;
 
-export const validateMonthsInApi = async (apiBudgetStatements, months, cu, inputWalletAddress, inputWalletName, inputLineItems, authToken) => {
+export const validateMonthsInApi = async (apiBudgetStatements, months, cu, inputWalletAddress, inputWalletName, inputLineItems, authToken, typeOfOwner) => {
     budgetStatements = [...apiBudgetStatements];
     spreadSheetMonths = months;
     coreUnit = cu;
     walletAddress = inputWalletAddress;
     walletName = inputWalletName
     token = authToken
+    ownerType = typeOfOwner
 
     statementMonths = budgetStatements.map(statement => {
         return statement.month;
@@ -82,7 +84,8 @@ const addBudgetStatementToApi = async (months) => {
                 ownerId: coreUnit.id,
                 ownerCode: coreUnit.code,
                 month: month,
-                status: 'Draft'
+                status: 'Draft',
+                ownerType
             }
             rows.push(row)
         }

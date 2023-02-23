@@ -13,7 +13,7 @@ export default function FTE({ month, budgetStatement, coreUnit }) {
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        if (budgetStatement.budgetStatementFTEs !== undefined) {
+        if (budgetStatement?.budgetStatementFTEs !== undefined) {
             if (budgetStatement.budgetStatementFTEs.length > 0) {
                 setFte(`${budgetStatement.budgetStatementFTEs[0].ftes}`)
                 setApiFte(budgetStatement.budgetStatementFTEs[0])
@@ -74,7 +74,7 @@ export default function FTE({ month, budgetStatement, coreUnit }) {
     const [addFte, { data, loading, error }] = useMutation(ADD_FTE, {
         variables: {
             input: {
-                budgetStatementId: budgetStatement.id,
+                budgetStatementId: budgetStatement?.id,
                 month,
                 ftes: parseFloat(fte),
                 coreUnitId: parseFloat(userFromStore.cuId)
@@ -92,7 +92,7 @@ export default function FTE({ month, budgetStatement, coreUnit }) {
         variables: {
             input: {
                 id: apiFte?.id,
-                budgetStatementId: budgetStatement.id,
+                budgetStatementId: budgetStatement?.id,
                 month,
                 ftes: parseFloat(fte),
                 coreUnitId: parseFloat(userFromStore.cuId)

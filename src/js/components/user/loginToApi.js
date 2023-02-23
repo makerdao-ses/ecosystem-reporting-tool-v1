@@ -59,7 +59,8 @@ export default function LoginToApi() {
     const handleLoginBtn = async () => {
 
         const facilitatorRole = 'CoreUnitFacilitator';
-        const superAdminRole = 'SuperAdmin'
+        const superAdminRole = 'SuperAdmin';
+        const delegatesRole = 'DelegatesAdmin';
 
         try {
             const result = await userLogin()
@@ -70,7 +71,7 @@ export default function LoginToApi() {
                 enqueueSnackbar('Cannot use tool without having assinged a CU id to your account', { variant: 'error' })
             }
             roles.map(role => {
-                if (role.name === facilitatorRole) {
+                if (role.name === facilitatorRole || role.name === delegatesRole) {
                     cuId = role.cuId
                     manyCuIds.push(role.cuId);
                 }

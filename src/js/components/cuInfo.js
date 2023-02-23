@@ -53,10 +53,11 @@ export default function CuInfo() {
                 cuId: sortedCus[0].id
             }));
             setCus(sortedCus)
-        }
+        };
+
         if (admin === 'admin') {
             getCus()
-        } else if (admin === 'facilitator' && isArray(userFromStore.cuIds)) {
+        } else if (admin !== 'admin' && isArray(userFromStore.cuIds)) {
             getCusForFacilitator()
         }
     }, []);
@@ -67,8 +68,9 @@ export default function CuInfo() {
                 return 'admin'
             } else if (role.name === 'CoreUnitFacilitator') {
                 return 'facilitator'
-            }
-            else {
+            } else if (role.name === 'DelegatesAdmin') {
+                return 'delegate'
+            } else {
                 return false
             }
         })

@@ -60,16 +60,25 @@ export default function UploadToDB(props) {
         }
     });
 
+    const getOwnerType = () => {
+        let ownerType = 'CoreUnit'
+        userFromStore.roles.forEach(role => {
+            if (role.cuId == userFromStore.cuId && role.name === 'DelegatesAdmin') {
+                ownerType = 'Delegates'
+            }
+        });
+        return ownerType;
+    }
+
     const fetchCoreUnit = async () => {
         const rawCoreUnit = await getCoreUnit(userFromStore.cuId)
-        setCoreUnit(rawCoreUnit.data.coreUnits[0])
-        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnits[0].id)
+        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnits[0].id, getOwnerType())
         const budgetStatements = rawBudgetStatements.data.budgetStatements;
         const [selectedBudget] = budgetStatements.filter(b => {
             return b.month === selectedMonth.concat('-01')
         })
         setcurrentBudget(selectedBudget)
-        const idsWallets = await validateMonthsInApi(budgetStatements, getAllMonths(), rawCoreUnit.data.coreUnits[0], walletAddress, walletName, lineItems, userFromStore.authToken);
+        const idsWallets = await validateMonthsInApi(budgetStatements, getAllMonths(), rawCoreUnit.data.coreUnits[0], walletAddress, walletName, lineItems, userFromStore.authToken, getOwnerType());
         setWalletIds(idsWallets);
         const wallet = idsWallets.find((wallet) => {
             if (wallet.month === `${selectedMonth}-01`) {
@@ -77,6 +86,7 @@ export default function UploadToDB(props) {
             }
         })
         setWalletId(wallet.walletId)
+        setCoreUnit(rawCoreUnit.data.coreUnits[0])
     }
 
     function getAllMonths() {
@@ -229,8 +239,8 @@ export default function UploadToDB(props) {
             if (DEBUG_UPLOAD) console.log('[DEBUG_UPLOAD] data to upload:', lineItemsToUpload)
 
             if (lineItemsToDelete.length > 0 && lineItemsToUpload.length > 0) {
-                lineItemsToDelete.push({ cuId: userFromStore.cuId })
-                lineItemsToUpload.push({ cuId: userFromStore.cuId })
+                lineItemsToDelete.push({ cuId: userFromStore.cuId, ownerType: getOwnerType() })
+                lineItemsToUpload.push({ cuId: userFromStore.cuId, ownerType: getOwnerType() })
                 if (DEBUG_UPLOAD) console.log('[DEBUG_UPLOAD] deleting and updating lineItems')
                 await deleteBudgetLineItems(lineItemsToDelete, userFromStore.authToken)
                 await budgetLineItemsBatchAdd({ variables: { input: lineItemsToUpload } });
@@ -238,7 +248,7 @@ export default function UploadToDB(props) {
                 enqueueSnackbar(`Updated expense report`, { variant: 'success' })
             }
             if (lineItemsToDelete.length === 0 && lineItemsToUpload.length > 0) {
-                lineItemsToUpload.push({ cuId: userFromStore.cuId })
+                lineItemsToUpload.push({ cuId: userFromStore.cuId, ownerType: getOwnerType() })
                 if (DEBUG_UPLOAD) console.log('[DEBUG_UPLOAD] adding new lineItems')
                 await budgetLineItemsBatchAdd({ variables: { input: lineItemsToUpload } });
                 setUploadStatus({ ...uploadStatus, updatingDb: false, uploading: true });
@@ -283,7 +293,7 @@ export default function UploadToDB(props) {
                     </Label>
                 </Card>
             </Grid>
-            <CommentTable walletId={walletId} month={`${selectedMonth}-01`} />
+            <CommentTable walletId={walletId} month={`${selectedMonth}-01`} ownerType={getOwnerType()} />
         </>
     )
 }
