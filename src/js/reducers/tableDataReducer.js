@@ -9,7 +9,6 @@ export default function googleAuthReducer(state = INITIAL_STATE, action) {
             return {...state, links: [...state.links, action.data]};
 
         case 'REMOVE_LINK':
-            console.log("Removing link", action)
             return {
                 ...state, 
                 links: state.links.filter(item => item.storageId !== action.storageId )
