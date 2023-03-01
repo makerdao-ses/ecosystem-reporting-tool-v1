@@ -213,11 +213,32 @@ export default function UploadToDB(props) {
                 filtered.push(...selectedLineItems);
                 selectedLineItems = null
             }
-
+            let cleanedActualsInNextThreeMonths = cleanActualsInNextThreeMonths(months, filtered)
             if (DEBUG_UPLOAD) console.log('[DEBUG_UPLOAD] filtered months to upload', filtered)
-            return filtered;
+            return cleanedActualsInNextThreeMonths;
         }
 
+    }
+
+    const cleanActualsInNextThreeMonths = (months, lineItems) => {
+        let cleanLineItems;
+        let count = 0;
+        for (let i = 1; i < months.length; i++) {
+            cleanLineItems = lineItems.map(item => {
+                if (item.month == months[i].concat('-01')) {
+                    if (item.actual > 0) {
+                        count++;
+                    }
+                    item.actual = 0;
+                }
+                return item;
+            })
+        }
+        if (count > 0) {
+            enqueueSnackbar(`Set ${count} actuals to 0 for the next 3 forecasted months from your ${months[0]} month`,
+                { variant: 'alert' })
+        }
+        return cleanLineItems;
     }
 
     const handleMonthChange = async () => {
