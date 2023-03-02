@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.6.0) - 2022-02-09
+
+### Changed
+
+- **Breaking change**: users need to get latest version of budget tool in order to being able to log in
+
+- Delegates can now log in and publish delegate data
+
+- When publishing an expense report for a certain month, any actual amount for the next 3 forecasted months will be removed and the user will be notified. As the forecasted next three months should only show forecasted values.
+
 ## [1.6.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.6.0) - 2022-02-09
 
 ### Changed
