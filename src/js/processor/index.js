@@ -31,11 +31,18 @@ export default async function processData(rawData, wallet) {
     sfMdExporter.getCategoriesByMonth(processor.leveledMonthsByCategory) // fix
     const sfSummary = sfMdExporter.mdByMonth;
 
+    let signValue = 1;
     for (const [key, value] of Object.entries(actualsByMonth)) {
         actualsByMonth[key].forEach(objType => {
             for (const [key1, value1] of Object.entries(objType)) {
+                if (value1 === 'actual') {
+                    signValue = processor.actualSignValue;
+                }
+                if(value1 === 'forecast') {
+                    signValue = processor.forecastSignValue;
+                }
                 if (value1 !== 'actual' && value1 !== 'owed' && value1 !== 'forecast' && value1 !== 'paid' && value1 !== 'estimate' && value1 !== 'difference') {
-                    objType[key1] = value1 * Math.sign(value1)
+                    objType[key1] = value1 * signValue;
                 }
                 if (key1.toLowerCase() === 'revenue') {
                     objType[key1] = value1 * -1
@@ -56,6 +63,8 @@ export default async function processData(rawData, wallet) {
     }
 
     const leveledMonthsByCategory = processor.leveledMonthsByCategory;
+
+    // console.log('leveledMonthsByCategory', leveledMonthsByCategory)
 
     // fix
     return { actualsByMonth, leveledMonthsByCategory, mdTextByMonth, sfSummary };

@@ -2,6 +2,8 @@
 const DEBUG_PROCESSOR = false;
 
 export default class Processor {
+    actualSignValue = 1;
+    forecastSignValue = 1;
 
     constructor(wallet) {
         this.wallet = wallet;
@@ -153,7 +155,7 @@ export default class Processor {
         this.filteredByCategoryMonth = this.buildSESView(this.parsedRows)
         this.leveledMonthsByCategory = this.buildSFView(this.filteredByCategoryMonth)
         // console.log('leveledMonthsByCategory', this.leveledMonthsByCategory)
-        // console.log('filteredByMonth', this.filteredByMonth)
+        // console.log('filteredByCategoryMonth', this.filteredByCategoryMonth)
     }
 
     getRawData = (data) => {
@@ -315,6 +317,10 @@ export default class Processor {
         let selectedFilter = JSON.parse(JSON.stringify(this.currentFilter()));
 
         let result = {}
+        let actualNegative = 0;
+        let actualPositive = 0;
+        let forecastNegative = 0;
+        let forecastPositive = 0;
         for (let i = 0; i < parsedRows.length; i++) {
             let row = parsedRows[i]
             if (!result.hasOwnProperty(row.category)) {
@@ -335,9 +341,21 @@ export default class Processor {
             }
 
             if (row.actual !== undefined) {
+                if (Math.sign(row.actual) === -1) {
+                    actualNegative++;
+                }
+                if (Math.sign(row.actual) === 1) {
+                    actualPositive++;
+                }
                 result[row.category][row.group][row.monthString]['actual'] += row.actual
             }
             if (row.forecast !== undefined) {
+                if (Math.sign(row.forecast) === -1) {
+                    forecastNegative++;
+                }
+                if (Math.sign(row.forecast) === 1) {
+                    forecastPositive++;
+                }
                 result[row.category][row.group][row.monthString]['forecast'] += row.forecast
             }
             if (row.paid !== undefined) {
@@ -347,17 +365,23 @@ export default class Processor {
                 result[row.category][row.group][row.monthString]['budget'] += row.budget
             }
         }
+        if (actualNegative > actualPositive) {
+            this.actualSignValue = -1;
+        }
+        if (forecastNegative > forecastPositive) {
+            this.forecastSignValue = -1;
+        }
 
         if (DEBUG_PROCESSOR) console.log(this.wallet, 'buildSESView() output:', result);
         for (const [key, value] of Object.entries(result)) {
             for (const [key1, value1] of Object.entries(result[key])) {
                 for (const [key2, value2] of Object.entries(result[key][key1])) {
                     for (const [key3, value3] of Object.entries(result[key][key1][key2])) {
-                        if (key3 === 'actual' || key3 === 'forecast' || key3 === 'paid') {
-                            result[key][key1][key2][key3] = result[key][key1][key2][key3] * Math.sign(result[key][key1][key2][key3])
+                        if (key3 === 'actual' || key3 === 'paid') {
+                            result[key][key1][key2][key3] = result[key][key1][key2][key3] * this.actualSignValue;
                         }
-                        if (key.toLowerCase() === 'revenue') {
-                            result[key][key1][key2][key3] = result[key][key1][key2][key3] * -1
+                        if (key3 === 'forecast') {
+                            result[key][key1][key2][key3] = result[key][key1][key2][key3] * this.forecastSignValue;
                         }
                     }
                 }
