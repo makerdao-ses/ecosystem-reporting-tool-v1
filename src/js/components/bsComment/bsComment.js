@@ -73,16 +73,17 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
     }
 
     const handleSelect = (value) => {
-        setStatus(value)
+        setStatus(value);
+    }
+
+    const handleInputText = (value) => {
+        setInputText(value)
+        setEditStatus(true)
     }
 
     const handleEditStatus = () => {
         setStatus('Draft')
-        setInputText(' ')
         setEditStatus(prevStatus => {
-            if(prevStatus) {
-                setInputText('')
-            }
             return !prevStatus
         })
     }
@@ -119,7 +120,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
                     :
                     <Textarea rows={4}
                         value={inputText}
-                        onChange={e => setInputText(e.target.value)}
+                        onChange={e => handleInputText(e.target.value)}
                     />
                 }
                 <Grid
@@ -154,7 +155,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
                             <Button
                                 variant="smallOutline"
                                 onClick={handleSubmit}
-                                disabled={!inputText}
+                                disabled={!editStatus}
                             >Submit</Button>
                         </Grid>
                     </div>
