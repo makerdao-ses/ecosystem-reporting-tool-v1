@@ -88,7 +88,7 @@ export default function CommentTable({ walletId, month, ownerType }) {
                 </Box>
                 <Grid
                     gap={1}
-                    columns={[5, '1fr 0.5fr 0.5fr 2.5fr 0.5fr']}
+                    columns={[6, '0.7fr 1fr 0.5fr 0.5fr 2fr 0.2fr']}
                     sx={{
                         borderBottom: "1px solid",
                         borderColor: "muted",
@@ -96,6 +96,9 @@ export default function CommentTable({ walletId, month, ownerType }) {
                         py: 1
                     }}
                 >
+                    <Box sx={{ fontWeight: "bold" }}>
+                        Group
+                    </Box>
                     <Box sx={{ fontWeight: "bold" }}>
                         Budget Category
                     </Box>
@@ -127,7 +130,7 @@ export default function CommentTable({ walletId, month, ownerType }) {
                         return (
                             <Grid
                                 gap={1}
-                                columns={[5, '1fr 0.5fr 0.5fr 2.5fr 0.5fr']}
+                                columns={[6, '0.7fr 1fr 0.5fr 0.5fr 2fr 0.2fr']}
                                 key={lineItem.id}
                                 sx={{
                                     borderBottom: "1px solid",
@@ -136,6 +139,7 @@ export default function CommentTable({ walletId, month, ownerType }) {
                                     py: "1"
                                 }}
                             >
+                                <Text >{lineItem.group}</Text>
                                 <Text >{lineItem.budgetCategory}</Text>
                                 <Text>{lineItem?.forecast?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
                                 <Text>{lineItem?.actual?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
