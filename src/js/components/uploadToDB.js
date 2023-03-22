@@ -235,8 +235,8 @@ export default function UploadToDB(props) {
             })
         }
         if (count > 0) {
-            enqueueSnackbar(`Set ${count} actuals to 0 for the next 3 forecasted months from your ${months[0]} month`,
-                { variant: 'alert' })
+            enqueueSnackbar(`Attention: ${count} actuals for future months have been reported as 0. (This warning is to be expected if you're uploading old expense reports.)`,
+                { variant: 'alert',  });
         }
         return cleanLineItems;
     }
