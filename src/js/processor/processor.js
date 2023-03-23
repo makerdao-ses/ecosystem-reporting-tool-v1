@@ -429,9 +429,12 @@ export default class Processor {
                     result[category][group][month].forecast = indexByCategoryByMonth[category][group][month]['forecast']
                     result[category][group][month].paid = indexByCategoryByMonth[category][group][month]['paid']
                 }
-
                 if (this.budgets[month] === undefined || this.budgets[month][category] === undefined) {
-                    result[category][group][month]['budget'] = 0
+                    if (indexByCategoryByMonth[category][group][month]?.budget !== undefined) {
+                        result[category][group][month]['budget'] = indexByCategoryByMonth[category][group][month]?.budget
+                    } else {
+                        result[category][group][month]['budget'] = 0
+                    }
                 } else {
                     result[category][group][month].budget = this.budgets[month][category]
                 }

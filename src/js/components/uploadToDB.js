@@ -236,7 +236,7 @@ export default function UploadToDB(props) {
         }
         if (count > 0) {
             enqueueSnackbar(`Attention: ${count} actuals for future months have been reported as 0. (This warning is to be expected if you're uploading old expense reports.)`,
-                { variant: 'alert',  autoHideDuration: 8000});
+                { variant: 'alert', autoHideDuration: 8000 });
         }
         return cleanLineItems;
     }
