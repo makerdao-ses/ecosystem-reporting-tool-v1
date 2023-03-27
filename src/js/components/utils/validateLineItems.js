@@ -35,13 +35,24 @@ export const validateLineItems = async (selectedLineItems) => {
         }
 
 
-
+        lineItemsToUpload = addExistingLineItemComments(lineItemsToDelete, lineItemsToUpload);
         return { lineItemsToDelete, lineItemsToUpload }
     } catch (error) {
         console.error(error)
     }
 
 
+};
+
+const addExistingLineItemComments = (deletedLineItems, lineItemsToUpload) => {
+    for (let deletedLineItem of deletedLineItems) {
+        for (let lineItemToUpload of lineItemsToUpload) {
+            if (deletedLineItem.budgetCategory === lineItemToUpload.budgetCategory && deletedLineItem.group === lineItemToUpload.group) {
+                lineItemToUpload.comments = deletedLineItem.comments;
+            }
+        }
+    }
+    return lineItemsToUpload;
 };
 
 const budgetCategoriesMap = [
