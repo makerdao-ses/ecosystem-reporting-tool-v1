@@ -88,11 +88,11 @@ export default function CommentTable({ walletId, month, ownerType }) {
                 </Box>
                 <Grid
                     gap={1}
-                    columns={[6, '0.7fr 1fr 0.5fr 0.5fr 2fr 0.2fr']}
+                    columns={[6, '0.7fr 1fr 0.5fr 0.5fr 2fr 0.27fr']}
                     sx={{
                         borderBottom: "1px solid",
                         borderColor: "muted",
-                        px: 1,
+                        px: 2,
                         py: 1
                     }}
                 >
