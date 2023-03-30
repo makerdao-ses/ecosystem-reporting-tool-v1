@@ -7,7 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.7.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.7.0) - 2022-02-09
+## [1.8.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.8.0) - 2023-03-30
+
+### Changed
+
+- Improve calculation logic when summarising spreadsheet numbers
+
+- Fixed white screen UI bug. 
+
+- Added group column in expense line items table
+
+- When updating an expense report, previous stored line item comments are saved and re-added if there's a matching line item budget category and grouping.
+
+## [1.7.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.7.0) - 2023-03-02
 
 ### Changed
 
