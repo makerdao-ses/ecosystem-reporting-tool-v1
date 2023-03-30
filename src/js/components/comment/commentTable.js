@@ -141,8 +141,12 @@ export default function CommentTable({ walletId, month, ownerType }) {
                             >
                                 <Text >{lineItem.group}</Text>
                                 <Text >{lineItem.budgetCategory}</Text>
-                                <Text>{lineItem?.forecast?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
-                                <Text>{lineItem?.actual?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+                                <Text>{
+                                    lineItem.forecast !== null ? lineItem.forecast.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                        : ''}</Text>
+                                <Text>{lineItem.actual !== null ? lineItem.actual.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                    : ''
+                                }</Text>
                                 <Text>
                                     <Input
                                         // value={comment}
