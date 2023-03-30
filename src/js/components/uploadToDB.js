@@ -146,7 +146,7 @@ export default function UploadToDB(props) {
         };
         rowObject.month = month;
         rowObject.position = canonicalObj ? canonicalObj.position : 0;
-        rowObject.group = group === 'undefined' ? '' : group;
+        rowObject.group = group === 'undefined' ? null : group;
         rowObject.budgetCategory = category;
         rowObject.forecast = roundNumber(lookup[category][group][month].forecast);
         rowObject.actual = roundNumber(lookup[category][group][month].actual);
