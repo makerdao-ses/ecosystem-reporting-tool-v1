@@ -72,7 +72,7 @@ export default function UploadToDB(props) {
 
     const fetchCoreUnit = async () => {
         const rawCoreUnit = await getCoreUnit(userFromStore.cuId)
-        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnits[0].id, getOwnerType())
+        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnits[0] ? rawCoreUnit.data.coreUnits[0].id : undefined, getOwnerType())
         const budgetStatements = rawBudgetStatements.data.budgetStatements;
         const [selectedBudget] = budgetStatements.filter(b => {
             return b.month === selectedMonth.concat('-01')

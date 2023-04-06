@@ -30,8 +30,9 @@ export default function CuInfo() {
                     cuListIndex: 0,
                     cuId: sortedCus[0].id
                 }));
-                setCus(sortedCus)
+                setCus(prevCus => [...prevCus, ...sortedCus])
             }
+            addDelegatesAdminToCus();
 
         };
         const getCusForFacilitator = async () => {
@@ -52,7 +53,8 @@ export default function CuInfo() {
                 cuListIndex: 0,
                 cuId: sortedCus[0].id
             }));
-            setCus(sortedCus)
+            setCus(prevCus => [...prevCus, ...sortedCus]);
+            addDelegatesAdminToCus();
         };
 
         if (admin === 'admin') {
@@ -60,6 +62,7 @@ export default function CuInfo() {
         } else if (admin !== 'admin' && isArray(userFromStore.cuIds)) {
             getCusForFacilitator()
         }
+
     }, []);
 
     const setRole = () => {
@@ -75,6 +78,15 @@ export default function CuInfo() {
             }
         })
         return admin;
+    }
+
+    const addDelegatesAdminToCus = () => {
+        userFromStore.roles.forEach(role => {
+            if (role.name === 'DelegatesAdmin') {
+                let del = [{ id: null, name: 'Recognized Delegates' }]
+                setCus(prevCus => [...prevCus, ...del])
+            }
+        });
     }
 
     const filter = {
@@ -118,7 +130,7 @@ export default function CuInfo() {
             </Card>
         )
     }
-    else if (adminRole == 'facilitator' || adminRole == 'admin') {
+    else if (adminRole == 'facilitator' || adminRole == 'delegate' || adminRole == 'admin') {
         if (cus.length > 0) {
             return (
                 <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
