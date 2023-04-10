@@ -78,17 +78,17 @@ const updateApiToMissingMonths = async () => {
 const addBudgetStatementToApi = async (months) => {
     try {
         const rows = [];
-
         for (let month of months) {
             const row = {
-                ownerId: coreUnit.id,
-                ownerCode: coreUnit.code,
+                ownerId: coreUnit ? coreUnit.id : null,
+                ownerCode: coreUnit ? coreUnit.code : null,
                 month: month,
                 status: 'Draft',
                 ownerType
             }
             rows.push(row)
         }
+        console.log(rows)
         const result = await addBudgetStatements(rows, token);
         const output = result.data.budgetStatementsBatchAdd
         for (let statement of output) {
@@ -128,7 +128,7 @@ const validateWallets = async () => {
 
     if (DEBUG_UPLOAD) console.log('newBudgetStatementWallets', newBudgetStatementWallets);
     if (newBudgetStatementWallets.length > 0) {
-        newBudgetStatementWallets.push({ cuId: coreUnit.id })
+        newBudgetStatementWallets.push({ cuId: coreUnit ? coreUnit.id : null })
         const result = await addBudgetStatementWallets(newBudgetStatementWallets, token);
         const newWallets = result.data.budgetStatementWalletBatchAdd;
         for (let wallet of newWallets) {

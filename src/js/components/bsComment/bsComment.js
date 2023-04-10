@@ -41,14 +41,17 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
         }
     };
     const getAuditors = async () => {
-        if (userFromStore.cuId !== '') {
+        if (userFromStore.cuId) {
             const cu = await getCoreUnit(userFromStore.cuId);
             if (cu.data.coreUnits[0].auditors.length > 0) {
                 setWithAuditor(true)
             }
         }
+        // Assuming that Delegates have auditors. 
+        if (userFromStore.cuId === null) {
+            setWithAuditor(true);
+        }
     }
-
     const handleSubmit = async () => {
         try {
             const commentObj = {

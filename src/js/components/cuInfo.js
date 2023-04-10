@@ -147,7 +147,7 @@ export default function CuInfo() {
         } else if (cus.length === 0) {
             return (
                 <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
-                    <Text sx={{ fontWeight: "bold", }}>{data.coreUnits[0]?.name} Core Unit</Text>
+                    <Text sx={{ fontWeight: "bold", }}>{data.coreUnits[0]?.name} {userFromStore.cuId === null ? 'Recognized Delegates' : 'Core Unit'}</Text>
                 </Card>
             )
         }
