@@ -100,7 +100,7 @@ export default function CommentTable({ walletId, month, ownerType }) {
                         Group
                     </Box>
                     <Box sx={{ fontWeight: "bold" }}>
-                        Budget Category
+                        Expense Category
                     </Box>
                     <Box sx={{ fontWeight: "bold" }}>
                         Forecast
