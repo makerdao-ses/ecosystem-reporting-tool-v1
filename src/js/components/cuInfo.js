@@ -17,15 +17,17 @@ export default function CuInfo() {
         const admin = setRole();
         setAdminRole(admin)
         const getCus = async () => {
-            const result = await getCoreUnits();
-            setCus(result.data.coreUnits);
+            let result = await getCoreUnits();
+            result = result.data.coreUnits.map(cu => { cu, cu.name = `[CoreUnit] ${cu.name}` })
+            console.log(result)
+            setCus(result);
             if (userFromStore.cuId === null || userFromStore.cuId === '' || userFromStore.cuListIndex === '') {
                 dispatch(storeListIndex({
                     cuListIndex: 0,
-                    cuId: result.data.coreUnits[0].id
+                    cuId: result[0].id
                 }));
             } else {
-                let sortedCus = moveInArray(result.data.coreUnits, userFromStore.cuListIndex, 0);
+                let sortedCus = moveInArray(result, userFromStore.cuListIndex, 0);
                 dispatch(storeListIndex({
                     cuListIndex: 0,
                     cuId: sortedCus[0].id
@@ -36,8 +38,9 @@ export default function CuInfo() {
 
         };
         const getCusForFacilitator = async () => {
-            const result = await getCoreUnits();
-            let sortedCus = moveInArray(result.data.coreUnits, userFromStore.cuListIndex, 0);
+            let result = await getCoreUnits();
+            result = result.data.coreUnits.map(cu => ({ ...cu, name: `[CoreUnit] ${cu.name}` }))
+            let sortedCus = moveInArray(result, userFromStore.cuListIndex, 0);
             if (isArray(userFromStore.cuIds)) {
                 const filteredCus = [];
                 userFromStore.cuIds.forEach(cuId => {
@@ -83,7 +86,7 @@ export default function CuInfo() {
     const addDelegatesAdminToCus = () => {
         userFromStore.roles.forEach(role => {
             if (role.name === 'DelegatesAdmin' && role.permission.includes('Delegates/Update')) {
-                let del = [{ id: null, name: 'Recognized Delegates' }]
+                let del = [{ id: null, name: '[Recognized Delegates]' }]
                 setCus(prevCus => [...prevCus, ...del])
             }
         });
@@ -134,7 +137,7 @@ export default function CuInfo() {
         if (cus.length > 0) {
             return (
                 <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
-                    <Label>Choose CoreUnit</Label>
+                    <Label>Choose Budget</Label>
                     <Select onChange={e => handleSelect(e.target.value)}>
                         {
                             cus.map(cu => {
