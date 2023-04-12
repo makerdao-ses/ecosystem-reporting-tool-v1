@@ -82,7 +82,7 @@ export default function CuInfo() {
 
     const addDelegatesAdminToCus = () => {
         userFromStore.roles.forEach(role => {
-            if (role.name === 'DelegatesAdmin') {
+            if (role.name === 'DelegatesAdmin' && role.permission.includes('Delegates/Update')) {
                 let del = [{ id: null, name: 'Recognized Delegates' }]
                 setCus(prevCus => [...prevCus, ...del])
             }

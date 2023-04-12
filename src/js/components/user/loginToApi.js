@@ -115,7 +115,7 @@ export default function LoginToApi() {
         if (result.data.userLogin.user.roles != null) {
             const roles = result.data.userLogin.user.roles.map(role => {
                 role.permissions.forEach(permission => {
-                    rolesWithId.push({ name: role.name, cuId: null })
+                    rolesWithId.push({ name: role.name, cuId: null, permission})
                 })
                 return role.permissions;
             }).flat();
