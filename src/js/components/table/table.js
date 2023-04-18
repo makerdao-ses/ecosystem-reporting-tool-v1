@@ -179,10 +179,10 @@ export default function Table() {
         setOpenModal(false)
     }
 
-    const checkBeforeNavigate = (spreadsheetId, tabId, rowWalletAddress, className) => {
+    const checkBeforeNavigate = (spreadsheetId, tabId, rowWalletAddress, className, walletName) => {
         if (className === 'unselectedBudget') {
             setOpenModal(true);
-            setModalData({ spreadsheetId, tabId })
+            setModalData({ spreadsheetId, tabId, rowWalletAddress, walletName })
         } else {
             navigate(`/api/${spreadsheetId}/${tabId}`)
         }
@@ -205,7 +205,12 @@ export default function Table() {
 
     return (
         <Container>
-            {openModal ? <CheckWalletModal closeModal={handleCloseModal} continueNavigation={continueNavigate} /> : ''}
+            {openModal ? <CheckWalletModal
+                closeModal={handleCloseModal}
+                continueNavigation={continueNavigate}
+                walletName={modalData.walletName}
+                walletAddress={modalData.rowWalletAddress}
+            /> : ''}
             <CuInfo />
             <Card sx={{ my: 2, mx: [1, "auto"], p: 0, pb: 3, maxWidth: "100%", }}>
                 <Grid
@@ -255,7 +260,7 @@ export default function Table() {
                                 <Text sx={{ fontSize: "9px" }}>
                                     <Button variant="smallOutline" onClick={() => navigate(`/md/${row.spreadsheetId}/${row.tabId}`)}>To MD </Button>
                                     <Button variant="smallOutline" onClick={() => navigate(`/json/${row.spreadsheetId}/${row.tabId}`)}>To JSON </Button>
-                                    <Button variant="smallOutline" onClick={() => checkBeforeNavigate(row.spreadsheetId, row.tabId, row.walletAddress, setClassName(row.walletAddress))} >To Api</Button>
+                                    <Button variant="smallOutline" onClick={() => checkBeforeNavigate(row.spreadsheetId, row.tabId, row.walletAddress, setClassName(row.walletAddress), row.walletName)} >To Api</Button>
                                     <Button bg='red' variant='small' name={row.storageId} onClick={handleTableRowDelete}>Delete</Button>
                                 </Text>
                             </Grid>
