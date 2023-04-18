@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Label, Input, Text, Grid, Box, Container, Badge, Link } from "theme-ui"
+import { Card, Button, Label, Input, Text, Grid, Box, Container, Badge, Link, Alert } from "theme-ui"
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { storeAuthObject } from '../../actions/googleAuth'
@@ -8,7 +8,8 @@ import processData from '../../processor/index';
 import CuInfo from '../cuInfo';
 import './table.css'
 import { useSnackbar } from 'notistack';
-
+import { getBudgetSatementInfo } from '../../api/graphql';
+import CheckWalletModal from '../modal/checkWalletModal.js'
 /**
  * Set DEBUG_TABLE_DATA=true to get debug output in the console.
  */
@@ -23,9 +24,27 @@ export default function Table() {
 
     const initialized = useSelector((store) => store.tableData.initialized);
     const tableData = useSelector((store) => store.tableData.links);
+    const userFromStore = useSelector(store => store.user);
+    const [cuWalletAddresses, setCuWalletAddress] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    const [modalData, setModalData] = useState({});
 
     if (DEBUG_TABLE_DATA) console.log('Table initialization flagged:', initialized);
     if (DEBUG_TABLE_DATA) console.log('tableData:', tableData);
+
+    useEffect(() => {
+        fetchWallet();
+    }, [userFromStore.cuId]);
+
+    const fetchWallet = async () => {
+        if (typeof userFromStore.cuId !== 'object' && userFromStore.cuId !== null && userFromStore.cuId !== '' && userFromStore.cuId !== undefined) {
+            const result = await getBudgetSatementInfo(userFromStore.cuId, 'CoreUnit');
+            setCuWalletAddress(result.data.budgetStatements[0].budgetStatementWallet)
+        } else if (userFromStore.cuId === null) {
+            const result = await getBudgetSatementInfo(userFromStore.cuId, 'Delegates');
+            setCuWalletAddress(result.data.budgetStatements[0].budgetStatementWallet)
+        }
+    }
 
     useEffect(() => {
         const getTokens = async () => {
@@ -155,8 +174,38 @@ export default function Table() {
         return address.substring(0, 6) + '...' + address.substring(address.length - 4);
     }
 
+    const handleCloseModal = (event) => {
+        event.preventDefault();
+        setOpenModal(false)
+    }
+
+    const checkBeforeNavigate = (spreadsheetId, tabId, rowWalletAddress, className) => {
+        if (className === 'unselectedBudget') {
+            setOpenModal(true);
+            setModalData({ spreadsheetId, tabId })
+        } else {
+            navigate(`/api/${spreadsheetId}/${tabId}`)
+        }
+    }
+
+    const continueNavigate = () => {
+        navigate(`/api/${modalData.spreadsheetId}/${modalData.tabId}`)
+        setOpenModal(false);
+    }
+
+    const setClassName = (rowWalletAddress) => {
+        let className = 'unselectedBudget'
+        cuWalletAddresses.forEach(cu => {
+            if (rowWalletAddress === cu.address) {
+                className = 'selectedBudget'
+            }
+        })
+        return className;
+    };
+
     return (
         <Container>
+            {openModal ? <CheckWalletModal closeModal={handleCloseModal} continueNavigation={continueNavigate} /> : ''}
             <CuInfo />
             <Card sx={{ my: 2, mx: [1, "auto"], p: 0, pb: 3, maxWidth: "100%", }}>
                 <Grid
@@ -195,17 +244,18 @@ export default function Table() {
                                     my: "2",
                                     py: "1"
                                 }}
+                                className={setClassName(row.walletAddress)}
                             >
-                                <Text>
+                                <div>
                                     <Text sx={{ display: 'block', fontWeight: 'bold' }}>{row.walletName}</Text>
                                     <Link sx={{ cursor: 'pointer' }} onClick={() => handleOpenWalletLink(row.walletAddress)}>{getShortFormAddress(row.walletAddress)}</Link>
-                                </Text>
+                                </div>
                                 <Text>{row.spreadSheetTitle}</Text>
                                 <Text>{row.sheetName}</Text>
                                 <Text sx={{ fontSize: "9px" }}>
                                     <Button variant="smallOutline" onClick={() => navigate(`/md/${row.spreadsheetId}/${row.tabId}`)}>To MD </Button>
                                     <Button variant="smallOutline" onClick={() => navigate(`/json/${row.spreadsheetId}/${row.tabId}`)}>To JSON </Button>
-                                    <Button variant="smallOutline" onClick={() => navigate(`/api/${row.spreadsheetId}/${row.tabId}`)} >To Api</Button>
+                                    <Button variant="smallOutline" onClick={() => checkBeforeNavigate(row.spreadsheetId, row.tabId, row.walletAddress, setClassName(row.walletAddress))} >To Api</Button>
                                     <Button bg='red' variant='small' name={row.storageId} onClick={handleTableRowDelete}>Delete</Button>
                                 </Text>
                             </Grid>

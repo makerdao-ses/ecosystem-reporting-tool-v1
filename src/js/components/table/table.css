@@ -23,3 +23,11 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.selectedBudget {
+  background-color: #e7f0fe;
+}
+
+.unselectedBudget {
+  background-color: #f3f3f3;
+}

@@ -88,7 +88,6 @@ const addBudgetStatementToApi = async (months) => {
             }
             rows.push(row)
         }
-        console.log(rows)
         const result = await addBudgetStatements(rows, token);
         const output = result.data.budgetStatementsBatchAdd
         for (let statement of output) {

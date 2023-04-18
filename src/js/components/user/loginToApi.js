@@ -67,9 +67,6 @@ export default function LoginToApi() {
             let cuId = undefined;
             let manyCuIds = [];
             const roles = extractRoleInfo(result);
-            if (roles.length < 1) {
-                enqueueSnackbar('Cannot use tool without having assinged a CU id to your account', { variant: 'error' })
-            }
             roles.map(role => {
                 if (role.name === facilitatorRole || role.name === delegatesRole) {
                     cuId = role.cuId
@@ -101,9 +98,7 @@ export default function LoginToApi() {
                 })
                 setusername('')
                 setPassword('')
-            } else {
-                enqueueSnackbar('Cannot use tool without having assinged a CU id to your account', { variant: 'error' })
-            }
+            } 
 
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' })
