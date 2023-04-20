@@ -304,7 +304,7 @@ export default class Processor {
             parsedRecord.paid = this.parseNumber(parsedRecord.paid)
         }
         if (parsedRecord.forecast !== undefined) {
-            parsedRecord.forecast = this.parseNumber(parsedRecord.forecast) * filter.forecast.signMultiplier
+            parsedRecord.forecast = this.parseNumber(parsedRecord.forecast)
         }
         if (parsedRecord.category === '') {
             parsedRecord.category = 'payment topup';
