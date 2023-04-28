@@ -12,7 +12,7 @@ jobs:
       - name: Using Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.17.1
+          node-version: 18.16.0
       - name: Install Dependencies
         run: npm install
       - name: Build App 
@@ -29,7 +29,7 @@ jobs:
       - name: Using Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.17.1
+          node-version: 18.16.0
       - name: Install Dependencies
         run: npm install
       - name: Build App 
@@ -46,7 +46,7 @@ jobs:
         - name: Using Node.js
           uses: actions/setup-node@v3
           with:
-            node-version: 16.17.1
+            node-version: 18.16.0
         - name: Install Dependencies
           run: npm install
         - name: Build App 
