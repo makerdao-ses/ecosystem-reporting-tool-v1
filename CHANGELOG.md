@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.9.0) - 2023-05-09
+
+### Changed
+
+- Refactor to allow Delegates to login and publish data
+
+- Added UX improvements when having multimple spreadsheets added for different budgets. User can see which spreadsheet 
+belongs to the respective budget. 
+
+- Updated node version for package publishing.
+
+- Fixed forecast total calculation bug. 
+
 ## [1.8.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.8.0) - 2023-03-30
 
 ### Changed
