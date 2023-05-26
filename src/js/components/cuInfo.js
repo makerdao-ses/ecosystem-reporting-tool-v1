@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Label, Select, Spinner, Text } from "theme-ui"
 import { useQuery } from "@apollo/client";
-import { GET_CORE_UNIT, getCoreUnits } from '../api/graphql';
+import { GET_CORE_UNIT, getCoreUnits, getCoreUnit } from '../api/graphql';
 import { useDispatch, useSelector } from 'react-redux';
 import { storeListIndex } from '../actions/user';
 import { isArray } from '@apollo/client/cache/inmemory/helpers';
@@ -12,6 +12,8 @@ export default function CuInfo() {
     const userFromStore = useSelector(store => store.user);
     const [cus, setCus] = useState([]);
     const [adminRole, setAdminRole] = useState(false);
+
+    // console.log(userFromStore)
 
     useEffect(() => {
         const admin = setRole();
@@ -35,6 +37,7 @@ export default function CuInfo() {
                 setCus(prevCus => [...prevCus, ...sortedCus])
             }
             addDelegatesAdminToCus();
+            addEcoystemActorToCus();
 
         };
         const getCusForFacilitator = async () => {
@@ -58,6 +61,7 @@ export default function CuInfo() {
             }));
             setCus(prevCus => [...prevCus, ...sortedCus]);
             addDelegatesAdminToCus();
+            addEcoystemActorToCus();
         };
 
         if (admin === 'admin') {
@@ -88,6 +92,16 @@ export default function CuInfo() {
             if (role.name === 'DelegatesAdmin' && role.permission.includes('Delegates/Update')) {
                 let del = [{ id: null, name: '[Recognized Delegates]' }]
                 setCus(prevCus => [...prevCus, ...del])
+            }
+        });
+    }
+
+    const addEcoystemActorToCus = () => {
+        userFromStore.roles.forEach(async role => {
+            if (role.name === 'EcosystemActorAdmin' && role.permission.includes('EcosystemActor/Update')) {
+                const ecoCu = await getCoreUnit(role.cuId);
+                let eco = [{ id: role.cuId, name: `[Ecosystem Actor] ${ecoCu.data.coreUnits[0].name}` }]
+                setCus(prevCus => [...prevCus, ...eco])
             }
         });
     }
