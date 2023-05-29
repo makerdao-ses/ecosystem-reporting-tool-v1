@@ -13,26 +13,25 @@ export default function CuInfo() {
     const [cus, setCus] = useState([]);
     const [adminRole, setAdminRole] = useState(false);
 
-    // console.log(userFromStore)
-
     useEffect(() => {
         const admin = setRole();
         setAdminRole(admin)
         const getCus = async () => {
             let result = await getCoreUnits();
-            result = result.data.coreUnits.map(cu => { cu, cu.name = `[CoreUnit] ${cu.name}` })
-            console.log(result)
+            result = result.data.coreUnits.map(cu => { cu, cu.name = `[CoreUnit] ${cu.name}`, ownerType = 'CoreUnit' })
             setCus(result);
             if (userFromStore.cuId === null || userFromStore.cuId === '' || userFromStore.cuListIndex === '') {
                 dispatch(storeListIndex({
                     cuListIndex: 0,
-                    cuId: result[0].id
+                    cuId: result[0].id,
+                    ownerType: result[0].ownerType
                 }));
             } else {
                 let sortedCus = moveInArray(result, userFromStore.cuListIndex, 0);
                 dispatch(storeListIndex({
                     cuListIndex: 0,
-                    cuId: sortedCus[0].id
+                    cuId: sortedCus[0].id,
+                    ownerType: sortedCus[0].ownerType
                 }));
                 setCus(prevCus => [...prevCus, ...sortedCus])
             }
@@ -42,7 +41,7 @@ export default function CuInfo() {
         };
         const getCusForFacilitator = async () => {
             let result = await getCoreUnits();
-            result = result.data.coreUnits.map(cu => ({ ...cu, name: `[CoreUnit] ${cu.name}` }))
+            result = result.data.coreUnits.map(cu => ({ ...cu, name: `[CoreUnit] ${cu.name}`, ownerType: 'CoreUnit' }))
             let sortedCus = moveInArray(result, userFromStore.cuListIndex, 0);
             if (isArray(userFromStore.cuIds)) {
                 const filteredCus = [];
@@ -57,7 +56,8 @@ export default function CuInfo() {
             }
             dispatch(storeListIndex({
                 cuListIndex: 0,
-                cuId: sortedCus[0].id
+                cuId: sortedCus[0].id,
+                ownerType: sortedCus[0].ownerType
             }));
             setCus(prevCus => [...prevCus, ...sortedCus]);
             addDelegatesAdminToCus();
@@ -90,7 +90,7 @@ export default function CuInfo() {
     const addDelegatesAdminToCus = () => {
         userFromStore.roles.forEach(role => {
             if (role.name === 'DelegatesAdmin' && role.permission.includes('Delegates/Update')) {
-                let del = [{ id: null, name: '[Recognized Delegates]' }]
+                let del = [{ id: null, name: '[Recognized Delegates]', ownerType: 'Delegates' }]
                 setCus(prevCus => [...prevCus, ...del])
             }
         });
@@ -100,7 +100,7 @@ export default function CuInfo() {
         userFromStore.roles.forEach(async role => {
             if (role.name === 'EcosystemActorAdmin' && role.permission.includes('EcosystemActor/Update')) {
                 const ecoCu = await getCoreUnit(role.cuId);
-                let eco = [{ id: role.cuId, name: `[Ecosystem Actor] ${ecoCu.data.coreUnits[0].name}` }]
+                let eco = [{ id: role.cuId, name: `[Ecosystem Actor] ${ecoCu.data.coreUnits[0].name}`, ownerType: 'EcosystemActor' }]
                 setCus(prevCus => [...prevCus, ...eco])
             }
         });
@@ -118,11 +118,12 @@ export default function CuInfo() {
 
     const handleSelect = (value) => {
         let index;
-        const coreUnits = cus.filter((cu, i) => {
+        cus.filter((cu, i) => {
             if (cu.name === value) {
                 dispatch(storeListIndex({
                     cuListIndex: i,
-                    cuId: cu.id
+                    cuId: cu.id,
+                    ownerType: cu.ownerType
                 }));
                 index = i;
                 return cu.id

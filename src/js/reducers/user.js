@@ -2,6 +2,7 @@ const INITIAL_STATE = {
     id: '',
     cuId: '',
     cuIds: '',
+    ownerType: '',
     username: '',
     authToken: '',
     auth: false,
@@ -39,6 +40,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 ...state,
                 cuListIndex: action.userData.cuListIndex,
                 cuId: action.userData.cuId,
+                ownerType: action.userData.ownerType,
                 roles: state.roles
             }
         case 'USER_CHANGE_PASSWORD':
