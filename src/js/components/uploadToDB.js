@@ -18,7 +18,7 @@ const DEBUG_UPLOAD = false;
 export default function UploadToDB(props) {
 
     const userFromStore = useSelector(store => store.user)
-    const { walletName, walletAddress, actualsByMonth, selectedMonth, leveledMonthsByCategory } = props.props;
+    const { walletName, walletAddress, actualsByMonth, selectedMonth, leveledMonthsByCategory, currency } = props.props;
     const [uploadStatus, setUploadStatus] = useState({ updatingDb: false, noChange: false, overriding: false, uploading: false })
     const [currentBudget, setcurrentBudget] = useState('')
 
@@ -132,7 +132,8 @@ export default function UploadToDB(props) {
             canonicalBudgetCategory: '',
             headcountExpense: '',
             budgetCap: 0,
-            payment: 0
+            payment: 0,
+            currency
         };
         rowObject.month = month;
         rowObject.position = canonicalObj ? canonicalObj.position : 0;
@@ -145,6 +146,7 @@ export default function UploadToDB(props) {
         rowObject.headcountExpense = canonicalObj ? canonicalObj.headCountExpense : null;
         rowObject.budgetCap = roundNumber(lookup[category][group][month].budget);
         rowObject.payment = roundNumber(lookup[category][group][month].paid);
+        rowObject.currency = lookup[category][group][month].currency;
         return rowObject;
     }
 
@@ -195,7 +197,7 @@ export default function UploadToDB(props) {
             let filtered = [];
             for (let i = 0; i < months.length; i++) {
                 let selectedLineItems = lineItems.filter(item => {
-                    if (item.month === months[i].concat('-01')) {
+                    if (item.month === months[i].concat('-01') && item.currency === currency) {
                         item.budgetStatementWalletId = walletId[0].walletId
                         return item;
                     }
@@ -245,7 +247,7 @@ export default function UploadToDB(props) {
             setUploadStatus({ ...uploadStatus, updatingDb: true })
 
             let data = filterFromLineItems(selectedMonth)
-            const { lineItemsToDelete, lineItemsToUpload } = await validateLineItems(data);
+            const { lineItemsToDelete, lineItemsToUpload } = await validateLineItems(data, currency);
             if (DEBUG_UPLOAD) console.log('[DEBUG_UPLOAD] data to delete', lineItemsToDelete)
             if (DEBUG_UPLOAD) console.log('[DEBUG_UPLOAD] data to upload:', lineItemsToUpload)
 

@@ -5,8 +5,9 @@ import SfMdExporter from './sfMdExporter.js';
 
 // TODO
 // Refactor -  minimize dependencies between data structures
-export default async function processData(rawData, wallet) {
+export default async function processData(rawData, wallet, currency) {
     const processor = new Processor(wallet);
+    processor.setCurrency(currency);
     processor.getRawData(rawData);
     processor.processData()
 

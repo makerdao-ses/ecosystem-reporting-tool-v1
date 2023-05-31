@@ -4,10 +4,15 @@ const DEBUG_PROCESSOR = false;
 export default class Processor {
     actualSignValue = 1;
     forecastSignValue = 1;
+    currency = 'DAI';
 
     constructor(wallet) {
         this.wallet = wallet;
     };
+
+    setCurrency(currency) {
+        this.currency = currency.toUpperCase();
+    }
 
     filterIndex = null;
 
@@ -136,6 +141,13 @@ export default class Processor {
             certain: false,
             labels: ['!group', 'Group'],
             parseFunction: 'tryParseString'
+        },
+        currency: {
+            column: null,
+            index: null,
+            certain: false,
+            labels: ['!currency', 'Currency'],
+            parseFunction: 'tryParseString'
         }
     }
 
@@ -180,15 +192,25 @@ export default class Processor {
         return typeof actual === 'number';
     }
 
+    isValidCurrency(currency) {
+        if (currency !== undefined && currency === this.currency) {
+            return true
+        } else {
+            return false;
+        }
+    }
+
     isValidExpenseRow(rowCandidate) {
         if (rowCandidate.category.toLowerCase() === 'budget') {
             return false;
         }
         return this.isValidMonth(rowCandidate.month) &&
-            (this.isValidNumber(rowCandidate.actual) ||
+            (
+                this.isValidNumber(rowCandidate.actual) ||
                 this.isValidNumber(rowCandidate.forecast) ||
                 this.isValidNumber(rowCandidate.estimate) ||
-                this.isValidNumber(rowCandidate.paid));
+                this.isValidNumber(rowCandidate.paid)
+            );
     }
 
     isValidBudgetRow(rowCandidate) {
@@ -214,23 +236,24 @@ export default class Processor {
                         }
                     }
                 }
+                if (this.isValidCurrency(arr.currency)) {
+                    if (this.isValidExpenseRow(arr)) {
+                        let selectedFilter = JSON.parse(JSON.stringify(this.currentFilter()));
 
-                if (this.isValidExpenseRow(arr)) {
-                    let selectedFilter = JSON.parse(JSON.stringify(this.currentFilter()));
+                        if ('actual' in arr) {
+                            selectedFilter.actual.signInitialized = true;
+                            selectedFilter.actual.signMultiplier = Math.sign(arr.actual);
+                        }
+                        if ('forecast' in arr) {
+                            selectedFilter.forecast.signInitialized = true;
+                            selectedFilter.forecast.signMultiplier = Math.sign(arr.forecast)
+                        }
 
-                    if ('actual' in arr) {
-                        selectedFilter.actual.signInitialized = true;
-                        selectedFilter.actual.signMultiplier = Math.sign(arr.actual);
+                        this.parsedRows.push(this.cleanExpenseRecord(arr, selectedFilter, this.budgets, this.filteredByCategoryMonth))
+                        arr = {}
+                    } else if (this.isValidBudgetRow(arr)) {
+                        this.processBudgetRow(arr, this.budgets)
                     }
-                    if ('forecast' in arr) {
-                        selectedFilter.forecast.signInitialized = true;
-                        selectedFilter.forecast.signMultiplier = Math.sign(arr.forecast)
-                    }
-
-                    this.parsedRows.push(this.cleanExpenseRecord(arr, selectedFilter, this.budgets, this.filteredByCategoryMonth))
-                    arr = {}
-                } else if (this.isValidBudgetRow(arr)) {
-                    this.processBudgetRow(arr, this.budgets)
                 }
             }
         }
@@ -336,7 +359,8 @@ export default class Processor {
                     actual: 0,
                     forecast: 0,
                     paid: 0,
-                    budget: 0
+                    budget: 0,
+                    currency: row.currency
                 }
             }
 
@@ -424,10 +448,12 @@ export default class Processor {
                     result[category][group][month]['actual'] = 0
                     result[category][group][month]['forecast'] = 0
                     result[category][group][month]['paid'] = 0
+                    result[category][group][month].currency = this.currency
                 } else {
                     result[category][group][month].actual = indexByCategoryByMonth[category][group][month]['actual']
                     result[category][group][month].forecast = indexByCategoryByMonth[category][group][month]['forecast']
                     result[category][group][month].paid = indexByCategoryByMonth[category][group][month]['paid']
+                    result[category][group][month].currency = indexByCategoryByMonth[category][group][month]['currency']
                 }
                 if (this.budgets[month] === undefined || this.budgets[month][category] === undefined) {
                     if (indexByCategoryByMonth[category][group][month]?.budget !== undefined) {

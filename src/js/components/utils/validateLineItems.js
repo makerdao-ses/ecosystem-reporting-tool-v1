@@ -11,7 +11,7 @@ const getWalletIds = (lineItems) => {
     return uniqueIds;
 }
 
-export const validateLineItems = async (selectedLineItems) => {
+export const validateLineItems = async (selectedLineItems, currency) => {
     lineItems = [...selectedLineItems];
 
     try {
@@ -25,9 +25,11 @@ export const validateLineItems = async (selectedLineItems) => {
         const apiLineItems = rawApiLineItems.data.budgetStatementLineItems
 
         if (apiLineItems.length > 0) {
-            lineItemsToDelete = apiLineItems.map(item => {
-                delete item.__typename
-                return item;
+            lineItemsToDelete = apiLineItems.filter(item => {
+                if (item.currency === currency) {
+                    delete item.__typename
+                    return item;
+                }
             })
             lineItemsToUpload = [...selectedLineItems]
         } else {

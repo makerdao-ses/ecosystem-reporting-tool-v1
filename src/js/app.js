@@ -46,9 +46,9 @@ export default function App() {
                     <Routes>
                         <Route path='/' element={<BudgetSheet />} />
                         <Route path='/settings' element={<Settings />} />
-                        <Route path='/json/:spreadsheetId/:tabId' element={<JSONView />} />
-                        <Route path='/md/:spreadsheetId/:tabId' element={<MDView />} />
-                        <Route path='/api/:spreadsheetId/:tabId' element={<ApiView />} />
+                        <Route path='/json/:spreadsheetId/:tabId/:currency/' element={<JSONView />} />
+                        <Route path='/md/:spreadsheetId/:tabId/:currency/' element={<MDView />} />
+                        <Route path='/api/:spreadsheetId/:tabId/:currency/' element={<ApiView />} />
                     </Routes>
                 </Router>
             </ApolloProvider>

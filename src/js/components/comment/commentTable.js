@@ -140,7 +140,7 @@ export default function CommentTable({ walletId, month, ownerType }) {
                                 }}
                             >
                                 <Text >{lineItem.group}</Text>
-                                <Text >{lineItem.budgetCategory}</Text>
+                                <Text >{`${lineItem.budgetCategory} ${lineItem.currency === 'MKR' ? '(MKR)' : ''}`}</Text>
                                 <Text>{
                                     lineItem.forecast !== null ? lineItem.forecast.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                         : ''}</Text>

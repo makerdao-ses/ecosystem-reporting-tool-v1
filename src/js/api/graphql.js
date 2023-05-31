@@ -113,6 +113,7 @@ export const getBudgetSatementInfo = async (ownerId, ownerType) => {
                                 forecast
                                 actual
                                 comments
+                                currency
                             }
                         }
                         budgetStatementFTEs {
@@ -298,6 +299,7 @@ export const getBudgetLineItems = async (walletId, month) => {
                             forecast
                             actual
                             comments
+                            currency
                         }
                     }
                 `,
@@ -325,6 +327,7 @@ export const getBudgetLineItems = async (walletId, month) => {
                             forecast
                             actual
                             comments
+                            currency
                         }
                     }
                 `,

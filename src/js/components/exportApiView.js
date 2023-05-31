@@ -5,11 +5,10 @@ import { Card, Label, Container, Select } from "theme-ui"
 import UploadToDB from './uploadToDB.js';
 
 export default function ApiView() {
-    const { spreadsheetId, tabId } = useParams();
-
+    const { spreadsheetId, tabId, currency } = useParams();
     const tableData = useSelector((tableData) => tableData.tableData.links);
     const filtered = tableData.filter(item => {
-        if (item.spreadsheetId == spreadsheetId && item.tabId == tabId)
+        if (item.spreadsheetId == spreadsheetId && item.tabId == tabId && item.currency === currency)
             return item
     })
 
@@ -44,7 +43,7 @@ export default function ApiView() {
     const currentYear = new Date().getFullYear()
     const index = keys.indexOf(currentYear + '-' + currentMonth);
     let filteredKeys
-    if(index !== -1) {
+    if (index !== -1) {
         filteredKeys = keys.slice(0, index + 1)
     } else {
         filteredKeys = keys;
@@ -78,7 +77,7 @@ export default function ApiView() {
                     })}
                 </Select>
             </Card>
-            <UploadToDB props={{ selectedMonth, keys, leveledMonthsByCategory, walletName, walletAddress, actualsByMonth }} />
+            <UploadToDB props={{ selectedMonth, keys, leveledMonthsByCategory, walletName, walletAddress, actualsByMonth, currency }} />
         </Container>
     )
 }

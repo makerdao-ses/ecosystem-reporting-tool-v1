@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Label, Input, Text, Grid, Box, Container, Badge, Link, Alert } from "theme-ui"
+import { Card, Button, Label, Input, Text, Grid, Box, Container, Badge, Link, Select } from "theme-ui"
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { storeAuthObject } from '../../actions/googleAuth'
@@ -28,6 +28,7 @@ export default function Table() {
     const [cuWalletAddresses, setCuWalletAddress] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [modalData, setModalData] = useState({});
+    const [currency, setCurrency] = useState('DAI');
 
     if (DEBUG_TABLE_DATA) console.log('Table initialization flagged:', initialized);
     if (DEBUG_TABLE_DATA) console.log('tableData:', tableData);
@@ -66,7 +67,7 @@ export default function Table() {
             if (Array.isArray(gsheetLinks)) {
                 if (DEBUG_TABLE_DATA) console.log(`Dispatching ${gsheetLinks.length} Gsheet links`, gsheetLinks);
                 for (const record of gsheetLinks) {
-                    await dispatchNewSheet(record.value.walletName, record.value.walletAddress, record.value.sheetUrl, record.id);
+                    await dispatchNewSheet(record.value.walletName, record.value.walletAddress, record.value.sheetUrl, record.id, record.value.currency);
                 }
             }
         }
@@ -111,7 +112,7 @@ export default function Table() {
             setValidatedInput({ ...validatedInput, variant: 'inputError', valid: false })
         } else {
             if (result[0] !== undefined && result[1] !== undefined && result[2] !== undefined) {
-                setValidatedInput({ ...validatedInput, variant: null, valid: true, duplicate: isDuplicateLink(result[1], result[2]) })
+                setValidatedInput({ ...validatedInput, variant: null, valid: true, duplicate: isDuplicateLink(result[1], result[2], currency) })
             } else {
                 setValidatedInput({ ...validatedInput, variant: 'inputError', valid: false })
             }
@@ -123,16 +124,17 @@ export default function Table() {
         event.preventDefault()
 
         const inputParameters = {
-            walletName: inputWalletName,
+            walletName: `${inputWalletName} (${currency})`,
             walletAddress: inputWalletAddress.toLowerCase(),
-            sheetUrl: inputSheetValue
+            sheetUrl: inputSheetValue,
+            currency
         }
 
         const storageId = await electron.addGsheetLink(inputParameters);
-        await dispatchNewSheet(inputParameters.walletName, inputParameters.walletAddress, inputParameters.sheetUrl, storageId);
+        await dispatchNewSheet(inputParameters.walletName, inputParameters.walletAddress, inputParameters.sheetUrl, storageId, currency);
     }
 
-    const dispatchNewSheet = async (walletName, walletAddress, sheetUrl, storageId) => {
+    const dispatchNewSheet = async (walletName, walletAddress, sheetUrl, storageId, selectedCurrency) => {
         try {
             const { result, error, rawData, spreadSheetTitle, sheetName, spreadsheetId, tabId } = await electron.getSheetInfo(sheetUrl);
 
@@ -140,8 +142,8 @@ export default function Table() {
                 setValidatedInput({ ...validatedInput, linkError: true, valid: false, variant: null })
                 electron.resetGsheetLinks()
             } else {
-                const { actualsByMonth, leveledMonthsByCategory, mdTextByMonth, sfSummary } = await processData(rawData, `${walletName} (ID:${storageId})`);
-                dispatch(storeLinkData({ spreadSheetTitle, sheetName, spreadsheetId, tabId, actualsByMonth, leveledMonthsByCategory, mdTextByMonth, sfSummary, walletName, walletAddress, storageId }))
+                const { actualsByMonth, leveledMonthsByCategory, mdTextByMonth, sfSummary } = await processData(rawData, `${walletName} (ID:${storageId})`, selectedCurrency);
+                dispatch(storeLinkData({ spreadSheetTitle, sheetName, spreadsheetId, tabId, actualsByMonth, leveledMonthsByCategory, mdTextByMonth, sfSummary, walletName, walletAddress, storageId, currency: selectedCurrency }))
                 setValidatedInput({ ...validatedInput, variant: null, })
                 setInputWalletName('')
                 setInputWalletAddress('')
@@ -160,9 +162,9 @@ export default function Table() {
         dispatch(removeLinkData(storageId))
     }
 
-    const isDuplicateLink = (spreadsheetId, tabId) => {
+    const isDuplicateLink = (spreadsheetId, tabId, currency) => {
         let response = tableData.filter(row => {
-            return row.spreadsheetId === spreadsheetId && row.tabId === Number(tabId)
+            return row.spreadsheetId === spreadsheetId && row.tabId === Number(tabId) && row.currency === currency
         })
         if (response.length == 0) {
             return false
@@ -180,12 +182,12 @@ export default function Table() {
         setOpenModal(false)
     }
 
-    const checkBeforeNavigate = (spreadsheetId, tabId, rowWalletAddress, className, walletName) => {
+    const checkBeforeNavigate = (spreadsheetId, tabId, rowWalletAddress, className, walletName, currency) => {
         if (className === 'unselectedBudget') {
             setOpenModal(true);
             setModalData({ spreadsheetId, tabId, rowWalletAddress, walletName })
         } else {
-            navigate(`/api/${spreadsheetId}/${tabId}`)
+            navigate(`/api/${spreadsheetId}/${tabId}/${currency}/`)
         }
     }
 
@@ -259,9 +261,9 @@ export default function Table() {
                                 <Text>{row.spreadSheetTitle}</Text>
                                 <Text>{row.sheetName}</Text>
                                 <Text sx={{ fontSize: "9px" }}>
-                                    <Button variant="smallOutline" onClick={() => navigate(`/md/${row.spreadsheetId}/${row.tabId}`)}>To MD </Button>
-                                    <Button variant="smallOutline" onClick={() => navigate(`/json/${row.spreadsheetId}/${row.tabId}`)}>To JSON </Button>
-                                    <Button variant="smallOutline" onClick={() => checkBeforeNavigate(row.spreadsheetId, row.tabId, row.walletAddress, setClassName(row.walletAddress), row.walletName)} >To Api</Button>
+                                    <Button variant="smallOutline" onClick={() => navigate(`/md/${row.spreadsheetId}/${row.tabId}/${row.currency}/`)}>To MD </Button>
+                                    <Button variant="smallOutline" onClick={() => navigate(`/json/${row.spreadsheetId}/${row.tabId}/${row.currency}/`)}>To JSON </Button>
+                                    <Button variant="smallOutline" onClick={() => checkBeforeNavigate(row.spreadsheetId, row.tabId, row.walletAddress, setClassName(row.walletAddress), row.walletName, row.currency)} >To Api</Button>
                                     <Button bg='red' variant='small' name={row.storageId} onClick={handleTableRowDelete}>Delete</Button>
                                 </Text>
                             </Grid>
@@ -272,12 +274,19 @@ export default function Table() {
             <Card sx={{ my: 4, p: 2, pb: 3, maxWidth: "100%" }}>
                 <Box>
                     <Grid
-                        columns={2}
+                        columns={[3, '0.8fr 1fr 1fr']}
                         sx={{
                             py: 1,
                             fontSize: "14px"
                         }}
                     >
+                        <div>
+                            <Label>Select Currency</Label>
+                            <Select defaultValue='DAI' onChange={e => setCurrency(e.target.value)}>
+                                <option>DAI</option>
+                                <option>MKR</option>
+                            </Select>
+                        </div>
                         <div>
                             <Label>
                                 <span className='tooltip'>

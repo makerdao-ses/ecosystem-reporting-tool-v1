@@ -7,12 +7,12 @@ import { Card, Divider, Label, Container, Textarea, Select, Button } from "theme
 
 
 export default function MDView() {
-    const { spreadsheetId, tabId } = useParams();
+    const { spreadsheetId, tabId, currency } = useParams();
     const tableData = useSelector((tableData) => tableData.tableData.links);
     const filtered = tableData.filter(item => {
-        if (item.spreadsheetId == spreadsheetId && item.tabId == tabId)
+        if (item.spreadsheetId == spreadsheetId && item.tabId == tabId && item.currency === currency)
             return item
-    })
+    });
     const [monthsArr, setMonthsArr] = useState(filtered[0]);
     const [md, setMd] = useState('');
     const [sfMd, setSfMd] = useState('');
