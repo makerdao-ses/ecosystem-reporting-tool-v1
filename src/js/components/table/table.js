@@ -37,7 +37,6 @@ export default function Table() {
         fetchWallet();
     }, [userFromStore.cuId]);
 
-
     const fetchWallet = async () => {
         if (typeof userFromStore.cuId !== 'object' && userFromStore.cuId !== null && userFromStore.cuId !== '' && userFromStore.cuId !== undefined) {
             const { data } = await getBudgetSatementInfo(userFromStore.cuId, userFromStore.ownerType);
@@ -185,14 +184,14 @@ export default function Table() {
     const checkBeforeNavigate = (spreadsheetId, tabId, rowWalletAddress, className, walletName, currency) => {
         if (className === 'unselectedBudget') {
             setOpenModal(true);
-            setModalData({ spreadsheetId, tabId, rowWalletAddress, walletName })
+            setModalData({ spreadsheetId, tabId, rowWalletAddress, walletName, currency })
         } else {
             navigate(`/api/${spreadsheetId}/${tabId}/${currency}/`)
         }
     }
 
     const continueNavigate = () => {
-        navigate(`/api/${modalData.spreadsheetId}/${modalData.tabId}`)
+        navigate(`/api/${modalData.spreadsheetId}/${modalData.tabId}/${modalData.currency}/`)
         setOpenModal(false);
     }
 

@@ -11,7 +11,9 @@ export default class Processor {
     };
 
     setCurrency(currency) {
-        this.currency = currency.toUpperCase();
+        if (currency !== undefined) {
+            this.currency = currency.toUpperCase();
+        }
     }
 
     filterIndex = null;

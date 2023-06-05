@@ -37,6 +37,7 @@ export default function CuInfo() {
             }
             addDelegatesAdminToCus();
             addEcoystemActorToCus();
+            addAlignedDelegatesToCus();
 
         };
         const getCusForFacilitator = async () => {
@@ -62,6 +63,7 @@ export default function CuInfo() {
             setCus(prevCus => [...prevCus, ...sortedCus]);
             addDelegatesAdminToCus();
             addEcoystemActorToCus();
+            addAlignedDelegatesToCus();
         };
 
         if (admin === 'admin') {
@@ -101,6 +103,16 @@ export default function CuInfo() {
             if (role.name === 'EcosystemActorAdmin' && role.permission.includes('EcosystemActor/Update')) {
                 const ecoCu = await getCoreUnit(role.cuId);
                 let eco = [{ id: role.cuId, name: `[Ecosystem Actor] ${ecoCu.data.coreUnits[0].name}`, ownerType: 'EcosystemActor' }]
+                setCus(prevCus => [...prevCus, ...eco])
+            }
+        });
+    }
+
+    const addAlignedDelegatesToCus = () => {
+        userFromStore.roles.forEach(async role => {
+            if (role.name === 'AlignedDelegatesAdmin' && role.permission.includes('AlignedDelegates/Update')) {
+                const ecoCu = await getCoreUnit(role.cuId);
+                let eco = [{ id: role.cuId, name: `[Aligned Delegates]`, ownerType: 'AlignedDelegates' }]
                 setCus(prevCus => [...prevCus, ...eco])
             }
         });

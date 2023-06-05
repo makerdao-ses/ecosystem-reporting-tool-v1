@@ -11,7 +11,6 @@ export default function ApiView() {
         if (item.spreadsheetId == spreadsheetId && item.tabId == tabId && item.currency === currency)
             return item
     })
-
     const [monthsArr, setMonthsArr] = useState(filtered[0]);
     const [jsonData, setJsonData] = useState('')
 

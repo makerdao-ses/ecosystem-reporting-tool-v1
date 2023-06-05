@@ -6,7 +6,7 @@ export default function CheckWalletModal({ closeModal, continueNavigation, walle
 
     return (
         <div className='modalBackground'>
-            <div className='modalContainer' style={{height: 350}}>
+            <div className='modalContainer' style={{height: 380}}>
                 <div className='titleCloseBtn'>
                     <button onClick={(event) => closeModal(event)}>x</button>
                 </div>
