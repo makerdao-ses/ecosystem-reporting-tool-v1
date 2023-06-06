@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.0) - 2023-06-06
+
+### Changed
+
+- Refactor to allow EcosystenActors and AlignedDelegates to login and publish data
+
+- Added MKR currency support when uploading budget expenses.
+
+- Minor bug fixes
+
 ## [1.9.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v1.9.0) - 2023-05-09
 
 ### Changed
