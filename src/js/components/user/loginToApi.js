@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { storeUserInfo } from '../../actions/user';
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { useSnackbar } from 'notistack';
+import { getCoreUnit } from '../../api/graphql';
 
 
 export default function LoginToApi() {
@@ -80,13 +81,15 @@ export default function LoginToApi() {
                 cuId = manyCuIds;
             }
             if (cuId !== undefined && roles.length > 0) {
+                const {data} = await getCoreUnit(cuId);
                 dispatch(storeUserInfo({
                     id: result.data.userLogin.user.id,
                     cuId,
                     cuIds: cuId,
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
-                    roles: roles
+                    roles: roles,
+                    ownerType: data.coreUnits[0].type 
                 }));
                 electron.saveApiCredentials({
                     id: result.data.userLogin.user.id,
@@ -94,11 +97,12 @@ export default function LoginToApi() {
                     cuIds: cuId,
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
-                    roles: roles
+                    roles: roles,
+                    ownerType: data.coreUnits[0].type
                 })
                 setusername('')
                 setPassword('')
-            } 
+            }
 
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' })
@@ -110,7 +114,7 @@ export default function LoginToApi() {
         if (result.data.userLogin.user.roles != null) {
             const roles = result.data.userLogin.user.roles.map(role => {
                 role.permissions.forEach(permission => {
-                    rolesWithId.push({ name: role.name, cuId: null, permission})
+                    rolesWithId.push({ name: role.name, cuId: null, permission })
                 })
                 return role.permissions;
             }).flat();

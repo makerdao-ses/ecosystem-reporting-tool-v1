@@ -42,6 +42,7 @@ export async function getCoreUnits() {
                     code
                     name
                     shortCode
+                    type
                  }
             }
             `
@@ -73,6 +74,7 @@ export const getCoreUnit = async (id) => {
                             id
                             username
                         }
+                        type
                     }
                 }
             `,

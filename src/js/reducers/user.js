@@ -21,6 +21,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 username: action.userData.username,
                 authToken: action.userData.authToken,
                 auth: true,
+                ownerType: action.userData.ownerType,
                 roles: action.userData.roles ? Array.from(action.userData.roles) : [...state.roles]
             }
         case 'USER_RESET':
