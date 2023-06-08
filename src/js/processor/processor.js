@@ -165,6 +165,12 @@ export default class Processor {
     processData = () => {
         this.updateFilter()
         this.parseRowData()
+        // Filtering by currency
+        this.parsedRows = this.parsedRows.filter(row => {
+            if (row.currency === this.currency) {
+                return row
+            }
+        })
         this.filterByMonth()
         this.filteredByCategoryMonth = this.buildSESView(this.parsedRows)
         this.leveledMonthsByCategory = this.buildSFView(this.filteredByCategoryMonth)
@@ -238,25 +244,24 @@ export default class Processor {
                         }
                     }
                 }
-                if (this.isValidCurrency(arr.currency)) {
-                    if (this.isValidExpenseRow(arr)) {
-                        let selectedFilter = JSON.parse(JSON.stringify(this.currentFilter()));
+                // if (this.isValidCurrency(arr.currency)) {
+                if (this.isValidExpenseRow(arr)) {
+                    let selectedFilter = JSON.parse(JSON.stringify(this.currentFilter()));
 
-                        if ('actual' in arr) {
-                            selectedFilter.actual.signInitialized = true;
-                            selectedFilter.actual.signMultiplier = Math.sign(arr.actual);
-                        }
-                        if ('forecast' in arr) {
-                            selectedFilter.forecast.signInitialized = true;
-                            selectedFilter.forecast.signMultiplier = Math.sign(arr.forecast)
-                        }
-
-                        this.parsedRows.push(this.cleanExpenseRecord(arr, selectedFilter, this.budgets, this.filteredByCategoryMonth))
-                        arr = {}
-                    } else if (this.isValidBudgetRow(arr)) {
-                        this.processBudgetRow(arr, this.budgets)
+                    if ('actual' in arr) {
+                        selectedFilter.actual.signInitialized = true;
+                        selectedFilter.actual.signMultiplier = Math.sign(arr.actual);
                     }
+                    if ('forecast' in arr) {
+                        selectedFilter.forecast.signInitialized = true;
+                        selectedFilter.forecast.signMultiplier = Math.sign(arr.forecast)
+                    }
+                    this.parsedRows.push(this.cleanExpenseRecord(arr, selectedFilter, this.budgets, this.filteredByCategoryMonth))
+                    arr = {}
+                } else if (this.isValidBudgetRow(arr)) {
+                    this.processBudgetRow(arr, this.budgets)
                 }
+                // }
             }
         }
         while (this.selectNextFilter(false))
@@ -334,8 +339,10 @@ export default class Processor {
         if (parsedRecord.category === '') {
             parsedRecord.category = 'payment topup';
         }
-
-        return parsedRecord
+        if (parsedRecord.currency === undefined) {
+            parsedRecord.currency = this.currency;
+        }
+        return parsedRecord;
     }
 
     buildSESView = (parsedRows) => {
@@ -362,7 +369,7 @@ export default class Processor {
                     forecast: 0,
                     paid: 0,
                     budget: 0,
-                    currency: row.currency
+                    currency: row.currency ? row.currency : this.currency
                 }
             }
 

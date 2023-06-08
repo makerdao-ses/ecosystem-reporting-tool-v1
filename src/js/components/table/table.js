@@ -136,7 +136,6 @@ export default function Table() {
     const dispatchNewSheet = async (walletName, walletAddress, sheetUrl, storageId, selectedCurrency) => {
         try {
             const { result, error, rawData, spreadSheetTitle, sheetName, spreadsheetId, tabId } = await electron.getSheetInfo(sheetUrl);
-
             if (result === 'error') {
                 setValidatedInput({ ...validatedInput, linkError: true, valid: false, variant: null })
                 electron.resetGsheetLinks()
@@ -149,6 +148,7 @@ export default function Table() {
                 setInputSheetValue('')
             }
         } catch (error) {
+            console.log(error)
             enqueueSnackbar(`Make sure to use spreadsheet tab with defined tags: ${error}`, { variant: 'error' })
         }
 
