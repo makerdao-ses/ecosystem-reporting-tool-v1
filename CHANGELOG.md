@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.1) - 2023-06-09
+
+### HOTFIX
+
+Download this version as version 2.0.0 has bugs that doesn't allow user to add spreadsheet or publish expense reports
+
+#### Fixed
+
+- Made `!Currency` tag optional and if not present, it is set to `DAI` as default.
+- Define `ownerType` when user logs in. 
+
 ## [2.0.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.0) - 2023-06-06
 
 ### Changed
