@@ -62,6 +62,8 @@ export default function LoginToApi() {
         const facilitatorRole = 'CoreUnitFacilitator';
         const superAdminRole = 'SuperAdmin';
         const delegatesRole = 'DelegatesAdmin';
+        const ecosystemActorRole = 'EcosystemActorAdmin';
+        const alignedDelegatesRole = 'AlignedDelegatesAdmin';
 
         try {
             const result = await userLogin()
@@ -69,7 +71,7 @@ export default function LoginToApi() {
             let manyCuIds = [];
             const roles = extractRoleInfo(result);
             roles.map(role => {
-                if (role.name === facilitatorRole || role.name === delegatesRole) {
+                if (role.name === facilitatorRole || role.name === delegatesRole || role.name === ecosystemActorRole || role.name === alignedDelegatesRole) {
                     cuId = role.cuId
                     manyCuIds.push(role.cuId);
                 }
@@ -81,7 +83,7 @@ export default function LoginToApi() {
                 cuId = manyCuIds;
             }
             if (cuId !== undefined && roles.length > 0) {
-                const {data} = await getCoreUnit(cuId);
+                const { data } = await getCoreUnit(cuId);
                 dispatch(storeUserInfo({
                     id: result.data.userLogin.user.id,
                     cuId,
@@ -89,7 +91,7 @@ export default function LoginToApi() {
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
                     roles: roles,
-                    ownerType: data.coreUnits[0].type 
+                    ownerType: data.coreUnits[0].type
                 }));
                 electron.saveApiCredentials({
                     id: result.data.userLogin.user.id,
