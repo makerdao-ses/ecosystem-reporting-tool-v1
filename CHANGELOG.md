@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.2) - 2023-06-16
+
+### HOTFIX
+
+This release fixes the single CU display if user has multiple teams that can upload expense reports to. 
+
+#### Fixed
+
+- Added missing roles when user logs in.
+
 ## [2.0.1](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.1) - 2023-06-09
 
 ### HOTFIX
