@@ -10,6 +10,7 @@ import './table.css'
 import { useSnackbar } from 'notistack';
 import { getBudgetSatementInfo } from '../../api/graphql';
 import CheckWalletModal from '../modal/checkWalletModal.js'
+import { getCoreUnit } from '../../api/graphql';
 /**
  * Set DEBUG_TABLE_DATA=true to get debug output in the console.
  */
@@ -29,12 +30,21 @@ export default function Table() {
     const [openModal, setOpenModal] = useState(false);
     const [modalData, setModalData] = useState({});
     const [currency, setCurrency] = useState('DAI');
+    const [teamName, setTeamName] = useState('');
 
     if (DEBUG_TABLE_DATA) console.log('Table initialization flagged:', initialized);
     if (DEBUG_TABLE_DATA) console.log('tableData:', tableData);
 
     useEffect(() => {
         fetchWallet();
+        const getTeamName = async () => {
+            if (userFromStore.cuId !== null) {
+                const result = await getCoreUnit(userFromStore.cuId);
+                setTeamName(result.data.coreUnits[0].name)
+            }
+            if (userFromStore.cuId === null) setTeamName('Delegates');
+        };
+        getTeamName();
     }, [userFromStore.cuId]);
 
     const fetchWallet = async () => {
@@ -212,6 +222,7 @@ export default function Table() {
                 continueNavigation={continueNavigate}
                 walletName={modalData.walletName}
                 walletAddress={modalData.rowWalletAddress}
+                teamName={teamName}
             /> : ''}
             <CuInfo />
             <Card sx={{ my: 2, mx: [1, "auto"], p: 0, pb: 3, maxWidth: "100%", }}>
