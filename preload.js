@@ -12,7 +12,7 @@ contextBridge.exposeInMainWorld('electron', {
   saveApiCredentials: (credentials) => ipcRenderer.invoke('save-api-credentials', credentials),
   getApiCredentials: () => ipcRenderer.invoke('get-api-credentials'),
   resetApiCredentials: () => ipcRenderer.invoke('reset-api-credentials'),
-  openDashboardLink: (cuName) => ipcRenderer.invoke('open-dashboard-link', { cuName }),
+  openDashboardLink: (resource) => ipcRenderer.invoke('open-dashboard-link', { resource }),
   getIsDev: () => ipcRenderer.invoke('get-isDev'),
   getIsStaging: () => ipcRenderer.invoke('get-isStaging'),
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),

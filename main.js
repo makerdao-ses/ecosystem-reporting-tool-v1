@@ -156,13 +156,19 @@ ipcMain.handle('open-wallet-link', (event, args) => {
 })
 
 ipcMain.handle('open-dashboard-link', async (event, args) => {
+    let resourceType = 'core-unit';
+    if (args.resource.type === 'CoreUnit') {
+        resourceType = 'core-unit'
+    } else if (args.resource.type === 'EcosystemActor') {
+        resourceType = 'ecosystem-actors'
+    }
     require('electron').shell.openExternal(await settings.get('isDev') && await settings.get('isStaging') === false ?
-        `https://expenses-dev.makerdao.network/core-unit/${args.cuName}/finances/reports`
+        `https://expenses-dev.makerdao.network/${resourceType}/${args.resource.shortCode}/finances/reports`
         :
         await settings.get('isDev') === false && await settings.get('isStaging') === false ?
-            `https://expenses.makerdao.network/core-unit/${args.cuName}/finances/reports`
+            `https://expenses.makerdao.network/${resourceType}/${args.resource.shortCode}/finances/reports`
             :
-            `https://expenses-staging.makerdao.network/core-unit/${args.cuName}/finances/reports`
+            `https://expenses-staging.makerdao.network/${resourceType}/${args.resource.shortCode}/finances/reports`
     )
 });
 
