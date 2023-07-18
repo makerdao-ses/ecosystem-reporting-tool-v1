@@ -106,12 +106,11 @@ export default function FTE({ month, budgetStatement, coreUnit }) {
         }
     })
 
-
     return (
         <>
             <Card>
                 <Box sx={{ textAlign: 'center', fontWeight: "bold" }}>
-                    {coreUnit?.shortCode} {userFromStore.cuId === null ? 'Recognized Delegates' : 'Team'} Expense Report {month.substring(0, month.length - 3)}
+                    <span style={{color: 'blue'}}>{coreUnit?.type.split(/(?=[A-Z])/).join(' ')}</span> {coreUnit?.shortCode} {userFromStore.cuId === null ? 'Recognized Delegates' : 'Team'} Expense Report {month.substring(0, month.length - 3)}
                     <br />
                 </Box>
                 <Label>Set FTE for {month.substring(0, month.length - 3)}</Label>
