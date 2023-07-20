@@ -22,5 +22,8 @@ contextBridge.exposeInMainWorld('electron', {
   getGsheetLinks: () => ipcRenderer.invoke('get-gsheet-links'),
   resetGsheetLinks: () => ipcRenderer.invoke('reset-gsheet-links'),
   addGsheetLink: (link) => ipcRenderer.invoke('add-gsheet-links', link),
-  deleteGsheetLink: (linkId) => ipcRenderer.invoke('delete-gsheet-links', linkId)
+  deleteGsheetLink: (linkId) => ipcRenderer.invoke('delete-gsheet-links', linkId),
+  saveSelectedValue: (selectedValue) => ipcRenderer.invoke('save-selectedValue', selectedValue),
+  getSelectedValue: () => ipcRenderer.invoke('get-selectedValue'),
+  deleteSelectedValue: (selectedValue) => ipcRenderer.invoke('reset-selectedValue', selectedValue),
 })

@@ -303,3 +303,4 @@ async function setEnv() {
 
 createJsonStorageVariable('api-credentials', null);
 createJsonStorageVariable('gsheet-links', [], true);
+createJsonStorageVariable('selectedValue', null);

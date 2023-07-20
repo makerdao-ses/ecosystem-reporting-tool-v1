@@ -8,13 +8,14 @@ import { isArray } from '@apollo/client/cache/inmemory/helpers';
 
 export default function CuInfo() {
     const dispatch = useDispatch();
-
     const userFromStore = useSelector(store => store.user);
     const [cus, setCus] = useState([]);
     const [adminRole, setAdminRole] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('');
 
     useEffect(() => {
         const admin = setRole();
+
         setAdminRole(admin)
         const getCus = async () => {
             let result = await getCoreUnits();
@@ -24,14 +25,14 @@ export default function CuInfo() {
                 dispatch(storeListIndex({
                     cuListIndex: 0,
                     cuId: result[0].id,
-                    ownerType: result[0].ownerType
+                    ownerType: result[0].ownerType,
                 }));
             } else {
                 let sortedCus = moveInArray(result, userFromStore.cuListIndex, 0);
                 dispatch(storeListIndex({
                     cuListIndex: 0,
                     cuId: sortedCus[0].id,
-                    ownerType: sortedCus[0].ownerType
+                    ownerType: sortedCus[0].ownerType,
                 }));
                 setCus(prevCus => [...prevCus, ...sortedCus])
             }
@@ -56,9 +57,9 @@ export default function CuInfo() {
                 sortedCus = filteredCus;
             }
             dispatch(storeListIndex({
-                cuListIndex: 0,
+                cuListIndex: userFromStore.cuListIndex ? userFromStore.cuListIndex : 0,
                 cuId: sortedCus[0].id,
-                ownerType: sortedCus[0].ownerType
+                ownerType: sortedCus[0].ownerType,
             }));
             setCus(prevCus => [...prevCus, ...sortedCus]);
             addDelegatesAdminToCus();
@@ -71,8 +72,12 @@ export default function CuInfo() {
         } else if (admin !== 'admin' && isArray(userFromStore.cuIds)) {
             getCusForFacilitator()
         }
-
     }, []);
+
+    // calling second useEffect to set the cuId once the cus list is finalized
+    useEffect(() => {
+        setIndexfromElectron()
+    }, [cus]);
 
     const setRole = () => {
         const [admin] = userFromStore.roles.map(role => {
@@ -129,7 +134,6 @@ export default function CuInfo() {
     });
 
     const handleSelect = (value) => {
-        let index;
         cus.filter((cu, i) => {
             if (cu.name === value) {
                 dispatch(storeListIndex({
@@ -137,12 +141,26 @@ export default function CuInfo() {
                     cuId: cu.id,
                     ownerType: cu.ownerType
                 }));
-                index = i;
-                return cu.id
             }
         });
-        const sortedCus = moveInArray(cus, index, 0);
-        setCus(sortedCus)
+        setSelectedOption(value);
+        electron.saveSelectedValue(value);
+    }
+
+    const setIndexfromElectron = async () => {
+        const electronSelectedValue = await electron.getSelectedValue();
+        if (electronSelectedValue !== null) {
+            setSelectedOption(electronSelectedValue);
+            cus.filter((cu, i) => {
+                if (cu.name === electronSelectedValue) {
+                    dispatch(storeListIndex({
+                        cuListIndex: i,
+                        cuId: cu.id,
+                        ownerType: cu.ownerType
+                    }));
+                }
+            });
+        }
     }
 
     if (loading) return <Spinner size={1} />
@@ -165,7 +183,7 @@ export default function CuInfo() {
             return (
                 <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
                     <Label>Choose Budget</Label>
-                    <Select onChange={e => handleSelect(e.target.value)}>
+                    <Select onChange={e => handleSelect(e.target.value)} value={selectedOption}>
                         {
                             cus.map(cu => {
                                 return <option key={cu.id}>{`${cu.name}`}</option>

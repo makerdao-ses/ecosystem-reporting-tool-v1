@@ -30,6 +30,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 id: '',
                 cuId: '',
                 cuIds: '',
+                ownerType: '',
                 username: '',
                 authToken: '',
                 auth: false,
@@ -39,10 +40,10 @@ export default function userReducer(state = INITIAL_STATE, action) {
         case 'CU_LIST_INDEX':
             return {
                 ...state,
-                cuListIndex: action.userData.cuListIndex,
-                cuId: action.userData.cuId,
-                ownerType: action.userData.ownerType,
-                roles: state.roles
+                cuListIndex: action.userData.cuListIndex ? action.userData.cuListIndex : state.cuListIndex,
+                cuId: action.userData.cuId ? action.userData.cuId : state.cuId,
+                ownerType: action.userData.ownerType ? action.userData.ownerType : state.ownerType,
+                roles: state.roles ? state.roles : action.userData.roles,
             }
         case 'USER_CHANGE_PASSWORD':
             return { ...state, authToken: '' }
@@ -51,3 +52,4 @@ export default function userReducer(state = INITIAL_STATE, action) {
         }
     }
 }
+

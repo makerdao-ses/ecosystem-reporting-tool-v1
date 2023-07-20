@@ -17,6 +17,8 @@ export default function UserInfo() {
     const handleLogoutBtn = async () => {
         dispatch(resetUserInfo())
         electron.resetApiCredentials()
+        const electronSelectedValue = await electron.getSelectedValue();
+        electron.deleteSelectedValue(electronSelectedValue)
     }
 
     return (
