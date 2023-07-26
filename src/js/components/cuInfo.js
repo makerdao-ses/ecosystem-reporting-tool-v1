@@ -87,6 +87,8 @@ export default function CuInfo() {
                 return 'facilitator'
             } else if (role.name === 'DelegatesAdmin') {
                 return 'delegate'
+            } else if (role.name === 'EcosystemActorAdmin') {
+                return 'ecosystemActor'
             } else {
                 return false
             }
@@ -178,7 +180,7 @@ export default function CuInfo() {
             </Card>
         )
     }
-    else if (adminRole == 'facilitator' || adminRole == 'delegate' || adminRole == 'admin') {
+    else if (adminRole == 'facilitator' || adminRole == 'ecosystemActor' || adminRole == 'delegate' || adminRole == 'admin') {
         if (cus.length > 0) {
             return (
                 <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
@@ -195,7 +197,15 @@ export default function CuInfo() {
         } else if (cus.length === 0) {
             return (
                 <Card sx={{ my: 2, textAlign: 'center', maxWidth: "100%" }}>
-                    <Text sx={{ fontWeight: "bold", }}>{data.coreUnits[0]?.name} {userFromStore.cuId === null ? 'Recognized Delegates' : 'Core Unit'}</Text>
+                    <Text
+                        sx={{ fontWeight: "bold", }}>
+                        {data.coreUnits[0]?.name} {
+                            userFromStore.cuId === null ?
+                                'Recognized Delegates'
+                                :
+                                `${data.coreUnits[0]?.type.split(/(?=[A-Z])/).join(' ')}`
+                        }
+                    </Text>
                 </Card>
             )
         }

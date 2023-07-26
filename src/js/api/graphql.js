@@ -56,6 +56,7 @@ export const GET_CORE_UNIT = gql`
         id
         code
         name
+        type
   }
 }
 `;
