@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.3](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.3) - 2023-07-26
+
+⚠️ Ecosystem Actor users are required to use this latest version in order to see their team name displayed when logging in.
+
+### Added
+
+- Improved UI information display
+
+### Fixed
+
+- Fixed Ecosystem Actor Team display
 
 ## [2.0.2](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.2) - 2023-06-16
 
