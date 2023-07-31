@@ -10,7 +10,7 @@ import './table.css'
 import { useSnackbar } from 'notistack';
 import { getBudgetSatementInfo } from '../../api/graphql';
 import CheckWalletModal from '../modal/checkWalletModal.js'
-import { getCoreUnit } from '../../api/graphql';
+import { getTeam } from '../../api/graphql';
 /**
  * Set DEBUG_TABLE_DATA=true to get debug output in the console.
  */
@@ -39,8 +39,8 @@ export default function Table() {
         fetchWallet();
         const getTeamName = async () => {
             if (userFromStore.cuId !== null) {
-                const result = await getCoreUnit(userFromStore.cuId);
-                setTeamName(result.data.coreUnits[0].name)
+                const result = await getTeam(userFromStore.cuId);
+                setTeamName(result.data.teams[0].name)
             }
             if (userFromStore.cuId === null) setTeamName('Delegates');
         };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Label, Select, Spinner, Text } from "theme-ui"
 import { useQuery } from "@apollo/client";
-import { GET_CORE_UNIT, getCoreUnits, getCoreUnit } from '../api/graphql';
+import { GET_CORE_UNIT, getTeams, getTeam } from '../api/graphql';
 import { useDispatch, useSelector } from 'react-redux';
 import { storeListIndex } from '../actions/user';
 import { isArray } from '@apollo/client/cache/inmemory/helpers';
@@ -18,8 +18,8 @@ export default function CuInfo() {
 
         setAdminRole(admin)
         const getCus = async () => {
-            let result = await getCoreUnits();
-            result = result.data.coreUnits.map(cu => { cu, cu.name = `[CoreUnit] ${cu.name}`, ownerType = 'CoreUnit' })
+            let result = await getTeams();
+            result = result.data.teams.map(cu => { cu, cu.name = `[${cu.type.split(/(?=[A-Z])/).join(' ')}}] ${cu.name}`, ownerType = cu.type })
             setCus(result);
             if (userFromStore.cuId === null || userFromStore.cuId === '' || userFromStore.cuListIndex === '') {
                 dispatch(storeListIndex({
@@ -37,13 +37,13 @@ export default function CuInfo() {
                 setCus(prevCus => [...prevCus, ...sortedCus])
             }
             addDelegatesAdminToCus();
-            addEcoystemActorToCus();
+            // addEcoystemActorToCus();
             addAlignedDelegatesToCus();
 
         };
         const getCusForFacilitator = async () => {
-            let result = await getCoreUnits();
-            result = result.data.coreUnits.map(cu => ({ ...cu, name: `[CoreUnit] ${cu.name}`, ownerType: 'CoreUnit' }))
+            let result = await getTeams();
+            result = result.data.teams.map(cu => ({ ...cu, name: `[${cu.type.split(/(?=[A-Z])/).join(' ')}}] ${cu.name}`, ownerType: cu.type }))
             let sortedCus = moveInArray(result, userFromStore.cuListIndex, 0);
             if (isArray(userFromStore.cuIds)) {
                 const filteredCus = [];
@@ -63,7 +63,7 @@ export default function CuInfo() {
             }));
             setCus(prevCus => [...prevCus, ...sortedCus]);
             addDelegatesAdminToCus();
-            addEcoystemActorToCus();
+            // addEcoystemActorToCus();
             addAlignedDelegatesToCus();
         };
 
@@ -108,8 +108,8 @@ export default function CuInfo() {
     const addEcoystemActorToCus = () => {
         userFromStore.roles.forEach(async role => {
             if (role.name === 'EcosystemActorAdmin' && role.permission.includes('EcosystemActor/Update')) {
-                const ecoCu = await getCoreUnit(role.cuId);
-                let eco = [{ id: role.cuId, name: `[Ecosystem Actor] ${ecoCu.data.coreUnits[0].name}`, ownerType: 'EcosystemActor' }]
+                const ecoCu = await getTeam(role.cuId);
+                let eco = [{ id: role.cuId, name: `[Ecosystem Actor] ${ecoCu.data.teams[0].name}`, ownerType: 'EcosystemActor' }]
                 setCus(prevCus => [...prevCus, ...eco])
             }
         });
@@ -118,7 +118,6 @@ export default function CuInfo() {
     const addAlignedDelegatesToCus = () => {
         userFromStore.roles.forEach(async role => {
             if (role.name === 'AlignedDelegatesAdmin' && role.permission.includes('AlignedDelegates/Update')) {
-                const ecoCu = await getCoreUnit(role.cuId);
                 let eco = [{ id: role.cuId, name: `[Aligned Delegates]`, ownerType: 'AlignedDelegates' }]
                 setCus(prevCus => [...prevCus, ...eco])
             }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forceUpdate } from 'react';
 import { Card, Label, Badge, Link, Grid, Button, Spinner } from "theme-ui"
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { getCoreUnit, getBudgetSatementInfo, deleteBudgetLineItems, getUsers } from '../api/graphql';
+import { getTeam, getBudgetSatementInfo, deleteBudgetLineItems, getUsers } from '../api/graphql';
 import { validateMonthsInApi } from './utils/validateMonths';
 import { validateLineItems, getCanonicalCategory } from './utils/validateLineItems'
 import { useSelector } from 'react-redux';
@@ -61,14 +61,14 @@ export default function UploadToDB(props) {
     });
 
     const fetchCoreUnit = async () => {
-        const rawCoreUnit = await getCoreUnit(userFromStore.cuId)
-        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.coreUnits[0] ? rawCoreUnit.data.coreUnits[0].id : undefined, userFromStore.ownerType)
+        const rawCoreUnit = await getTeam(userFromStore.cuId)
+        const rawBudgetStatements = await getBudgetSatementInfo(rawCoreUnit.data.teams[0] ? rawCoreUnit.data.teams[0].id : undefined, userFromStore.ownerType)
         const budgetStatements = rawBudgetStatements.data.budgetStatements;
         const [selectedBudget] = budgetStatements.filter(b => {
             return b.month === selectedMonth.concat('-01')
         })
         setcurrentBudget(selectedBudget)
-        const idsWallets = await validateMonthsInApi(budgetStatements, getAllMonths(), rawCoreUnit.data.coreUnits[0], walletAddress, walletName, lineItems, userFromStore.authToken, userFromStore.ownerType);
+        const idsWallets = await validateMonthsInApi(budgetStatements, getAllMonths(), rawCoreUnit.data.teams[0], walletAddress, walletName, lineItems, userFromStore.authToken, userFromStore.ownerType);
         setWalletIds(idsWallets);
         const wallet = idsWallets.find((wallet) => {
             if (wallet.month === `${selectedMonth}-01`) {
@@ -76,7 +76,7 @@ export default function UploadToDB(props) {
             }
         })
         setWalletId(wallet.walletId)
-        setCoreUnit(rawCoreUnit.data.coreUnits[0])
+        setCoreUnit(rawCoreUnit.data.teams[0])
     }
 
     function getAllMonths() {

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, Label, Input, Button, Spinner } from "theme-ui";
 import { useDispatch, useSelector } from 'react-redux';
 import { storeUserInfo } from '../../actions/user';
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { useSnackbar } from 'notistack';
-import { getCoreUnit } from '../../api/graphql';
+import { getTeam } from '../../api/graphql';
 
 
 export default function LoginToApi() {
@@ -83,7 +83,7 @@ export default function LoginToApi() {
                 cuId = manyCuIds;
             }
             if (cuId !== undefined && roles.length > 0) {
-                const { data } = await getCoreUnit(cuId);
+                const { data } = await getTeam(cuId);
                 dispatch(storeUserInfo({
                     id: result.data.userLogin.user.id,
                     cuId,
@@ -91,7 +91,7 @@ export default function LoginToApi() {
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
                     roles: roles,
-                    ownerType: data.coreUnits[0].type
+                    ownerType: data.teams[0].type
                 }));
                 electron.saveApiCredentials({
                     id: result.data.userLogin.user.id,
@@ -100,7 +100,7 @@ export default function LoginToApi() {
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
                     roles: roles,
-                    ownerType: data.coreUnits[0].type
+                    ownerType: data.teams[0].type
                 })
                 setusername('')
                 setPassword('')

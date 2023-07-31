@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm';
 import { useSelector } from 'react-redux';
-import { getBudgetStatementComments, createBudgetStatementComment, getCoreUnit } from '../../api/graphql';
+import { getBudgetStatementComments, createBudgetStatementComment, getTeam } from '../../api/graphql';
 
 export default function BudgetStatementComment({ budgetStatementId, users }) {
 
@@ -42,8 +42,8 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
     };
     const getAuditors = async () => {
         if (userFromStore.cuId) {
-            const cu = await getCoreUnit(userFromStore.cuId);
-            if (cu.data.coreUnits[0].auditors.length > 0) {
+            const cu = await getTeam(userFromStore.cuId);
+            if (cu.data.teams[0].auditors.length > 0) {
                 setWithAuditor(true)
             }
         }

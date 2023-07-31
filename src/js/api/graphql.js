@@ -33,11 +33,11 @@ export const GET_CORE_UNITS = gql`
 }
 `;
 
-export async function getCoreUnits() {
+export async function getTeams() {
     const cus = client.query({
         query: gql`
-            query getCoreUnits {
-                coreUnits {
+            query getTeams {
+                teams {
                     id
                     code
                     name
@@ -61,12 +61,12 @@ export const GET_CORE_UNIT = gql`
 }
 `;
 
-export const getCoreUnit = async (id) => {
+export const getTeam = async (id) => {
     try {
         const cu = client.query({
             query: gql`
-                query getCoreUnit($filter: CoreUnitFilter){
-                    coreUnits(filter: $filter) {
+                query getTeam($filter: TeamFilter){
+                    teams(filter: $filter) {
                         id
                         code
                         name
