@@ -41,7 +41,7 @@ export default function userReducer(state = INITIAL_STATE, action) {
             return {
                 ...state,
                 cuListIndex: action.userData.cuListIndex ? action.userData.cuListIndex : state.cuListIndex,
-                cuId: action.userData.cuId ? action.userData.cuId : state.cuId,
+                cuId: action.userData.cuId || action.userData.cuId == null ? action.userData.cuId : state.cuId,
                 ownerType: action.userData.ownerType ? action.userData.ownerType : state.ownerType,
                 roles: state.roles ? state.roles : action.userData.roles,
             }
