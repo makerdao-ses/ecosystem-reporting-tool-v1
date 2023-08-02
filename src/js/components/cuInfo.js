@@ -19,7 +19,7 @@ export default function CuInfo() {
         setAdminRole(admin)
         const getCus = async () => {
             let result = await getTeams();
-            result = result.data.teams.map(cu => { cu, cu.name = `[${cu.type.split(/(?=[A-Z])/).join(' ')}}] ${cu.name}`, ownerType = cu.type })
+            result = result.data.teams.map(cu => { cu, cu.name = `[${cu.type.split(/(?=[A-Z])/).join(' ')}] ${cu.name}`, ownerType = cu.type })
             setCus(result);
             if (userFromStore.cuId === null || userFromStore.cuId === '' || userFromStore.cuListIndex === '') {
                 dispatch(storeListIndex({
@@ -43,7 +43,7 @@ export default function CuInfo() {
         };
         const getCusForFacilitator = async () => {
             let result = await getTeams();
-            result = result.data.teams.map(cu => ({ ...cu, name: `[${cu.type.split(/(?=[A-Z])/).join(' ')}}] ${cu.name}`, ownerType: cu.type }))
+            result = result.data.teams.map(cu => ({ ...cu, name: `[${cu.type.split(/(?=[A-Z])/).join(' ')}] ${cu.name}`, ownerType: cu.type }))
             let sortedCus = moveInArray(result, userFromStore.cuListIndex, 0);
             if (isArray(userFromStore.cuIds)) {
                 const filteredCus = [];
