@@ -52,8 +52,8 @@ export default function Table() {
             const { data } = await getBudgetSatementInfo(userFromStore.cuId, userFromStore.ownerType);
             setCuWalletAddress(data.budgetStatements.length > 0 ? data.budgetStatements[0].budgetStatementWallet : [])
         } else if (userFromStore.cuId === null) {
-            const result = await getBudgetSatementInfo(userFromStore.cuId, 'Delegates');
-            setCuWalletAddress(result.data.budgetStatements[0].budgetStatementWallet)
+            const { data } = await getBudgetSatementInfo(userFromStore.cuId, userFromStore.ownerType);
+            setCuWalletAddress(data.budgetStatements.length > 0 ? data.budgetStatements[0].budgetStatementWallet : [])
         }
     }
 
