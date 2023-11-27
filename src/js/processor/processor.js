@@ -283,7 +283,7 @@ export default class Processor {
         if (parsedRecord.category === '') {
             parsedRecord.category = 'payment topup';
         }
-        if (parsedRecord.budget !== undefined) {
+        if (parsedRecord.budget !== undefined && parsedRecord.currency === this.currency) {
             parsedRecord.budget = this.parseNumber(parsedRecord.budget)
             if (budgets[parsedRecord.monthString] === undefined) {
                 budgets[parsedRecord.monthString] = {}
