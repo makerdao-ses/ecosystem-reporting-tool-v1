@@ -166,6 +166,7 @@ export default class Processor {
         this.updateFilter()
         this.parseRowData()
         // Filtering by currency
+        console.log(this.budgets)
         this.parsedRows = this.parsedRows.filter(row => {
             if (row.currency === this.currency) {
                 return row
@@ -174,8 +175,8 @@ export default class Processor {
         this.filterByMonth()
         this.filteredByCategoryMonth = this.buildSESView(this.parsedRows)
         this.leveledMonthsByCategory = this.buildSFView(this.filteredByCategoryMonth)
-        // console.log('leveledMonthsByCategory', this.leveledMonthsByCategory)
-        // console.log('filteredByCategoryMonth', this.filteredByCategoryMonth)
+        console.log('filteredByCategoryMonth', this.filteredByCategoryMonth)
+        console.log('leveledMonthsByCategory', this.leveledMonthsByCategory)
     }
 
     getRawData = (data) => {
@@ -289,9 +290,18 @@ export default class Processor {
                 budgets[parsedRecord.monthString] = {}
             }
             if (budgets[parsedRecord.monthString][parsedRecord.category] === undefined) {
-                budgets[parsedRecord.monthString][parsedRecord.category] = 0;
+                budgets[parsedRecord.monthString][parsedRecord.category] = {};
             }
-            budgets[parsedRecord.monthString][parsedRecord.category] += parsedRecord.budget
+            // add group to budget and set to null if '' or undefined
+            if (parsedRecord.group === '' || parsedRecord.group === undefined) {
+                parsedRecord.group = null;
+            }
+            if (budgets[parsedRecord.monthString][parsedRecord.category][parsedRecord.group] === undefined) {
+                budgets[parsedRecord.monthString][parsedRecord.category][parsedRecord.group] = 0;
+            }
+            // console.log('parsedRecord',parsedRecord.monthString, parsedRecord.category, parsedRecord.group, parsedRecord.budget)
+            budgets[parsedRecord.monthString][parsedRecord.category][parsedRecord.group] += Number(parsedRecord.budget)
+            // console.log(budgets[parsedRecord.monthString][parsedRecord.category][`${parsedRecord.group}`])
         }
 
         // console.log('budgets', this.budgets)
@@ -342,6 +352,9 @@ export default class Processor {
         if (parsedRecord.currency === undefined) {
             parsedRecord.currency = this.currency;
         }
+        if (parsedRecord.group === '' || parsedRecord.group === undefined || parsedRecord.group === null) {
+            parsedRecord.group = null
+        }
         return parsedRecord;
     }
 
@@ -358,7 +371,6 @@ export default class Processor {
             if (!result.hasOwnProperty(row.category)) {
                 result[row.category] = {}
             }
-
             if (!result[row.category].hasOwnProperty(row.group)) {
                 result[row.category][row.group] = {}
             }
@@ -471,7 +483,8 @@ export default class Processor {
                         result[category][group][month]['budget'] = 0
                     }
                 } else {
-                    result[category][group][month].budget = this.budgets[month][category]
+                    // console.log(category, group, month, this.budgets[month][category][group] ? this.budgets[month][category][group] : 0)
+                    result[category][group][month].budget = this.budgets[month][category][group] ? this.budgets[month][category][group] : 0
                 }
             }
         }
