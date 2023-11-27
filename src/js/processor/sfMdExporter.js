@@ -93,7 +93,7 @@ export default class SfMdExporter {
                     if (this.categoriesByMonth[tag][group][months[i]] !== undefined) {
                         this.item += `|${tag}|`
 
-                        this.item += group !== 'undefined' ? `${group} |` : ` |`
+                        this.item += group !== 'null' ? `${group} |` : ` |`
                         this.item += `${this.categoriesByMonth[tag][group][months[i]]['actual'].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|`
                         this.item += `${this.categoriesByMonth[tag][group][months[i]]['forecast'].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|`
                         this.item += `${this.categoriesByMonth[tag][group][months[i]]['budget'].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|`
