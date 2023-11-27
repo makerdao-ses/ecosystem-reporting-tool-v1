@@ -12,8 +12,8 @@ export default class SfMdExporter {
     mdByMonth = {}
     totals = {}
     template = `
-| Expense Category| Actual | Forecast | Budget  |Actual | Forecast  | Budget  |Actual | Forecast | Budget  |Actual | Forecast  | Budget  |
-| ----------------| -----: | -------: | ------: |-----: | --------: | ------: |-----: | -------: | ------: |-----: | --------: | ------: |
+| Expense Category|  Group  | Actual | Forecast | Budget  | Actual | Forecast  | Budget  | Actual | Forecast | Budget  | Actual | Forecast  | Budget  |
+| ----------------| :----:  | -----: | -------: | ------: | -----: | --------: | ------: | -----: | -------: | ------: | -----: | --------: | ------: |
 `;
 
     getCategoriesByMonth(categoriesByMonth) {
@@ -82,7 +82,7 @@ export default class SfMdExporter {
             // console.log('threeExtraMonths', threeMonths)
 
             // adding month strings to table 
-            this.item += `| | ${months[i]} | | |`
+            this.item += `| | | ${months[i]} | | |`
             threeMonths.forEach(newMonth => {
                 this.item += `${newMonth} | | |`
             })
@@ -93,7 +93,7 @@ export default class SfMdExporter {
                     if (this.categoriesByMonth[tag][group][months[i]] !== undefined) {
                         this.item += `|${tag}|`
 
-
+                        this.item += group !== 'undefined' ? `${group} |` : ` |`
                         this.item += `${this.categoriesByMonth[tag][group][months[i]]['actual'].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|`
                         this.item += `${this.categoriesByMonth[tag][group][months[i]]['forecast'].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|`
                         this.item += `${this.categoriesByMonth[tag][group][months[i]]['budget'].toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|`
@@ -115,6 +115,7 @@ export default class SfMdExporter {
 
             // adding totals 
             this.item += '| Total |';
+            this.item += ` |`;
             this.item += ` ${this.totals[months[i]].totalActual.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} |`;
             this.item += ` ${this.totals[months[i]].totalForecast.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} |`;
             this.item += ` ${this.totals[months[i]].totalBudget.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} |`;
