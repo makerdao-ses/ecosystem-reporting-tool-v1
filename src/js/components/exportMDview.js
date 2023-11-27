@@ -35,7 +35,7 @@ export default function MDView() {
 
 
 
-    const [selectedMonth, setSelectedMonth] = useState(keys[keys.length-1]);
+    const [selectedMonth, setSelectedMonth] = useState(keys[keys.length - 1]);
 
     const handleSelect = (value) => {
         setSelectedMonth(value);
@@ -76,7 +76,7 @@ export default function MDView() {
         <Container >
             <Card sx={{ mx: 'auto', mb: 4, my: 2 }}>
                 <Label>Choose Month</Label>
-                <Select onChange={e => handleSelect(e.target.value)} defaultValue={`${keys[keys.length-1]}`}>
+                <Select onChange={e => handleSelect(e.target.value)} defaultValue={`${keys[keys.length - 1]}`}>
                     {keys.map(month => {
                         return <option key={month}>{`${month}`}</option>
                     })}
@@ -90,7 +90,9 @@ export default function MDView() {
             <Card sx={{ mx: 'auto', mb: 4, my: 2 }}>
                 <Label>MarkDown View for {selectedMonth}</Label>
                 <Divider />
-                <ReactMarkdown children={sesView ? md : sfMd} remarkPlugins={[remarkGfm]} />
+                <div style={{ overflowX: 'auto', overflowY: 'auto', whiteSpace: 'nowrap' }}>
+                    <ReactMarkdown children={sesView ? md : sfMd} remarkPlugins={[remarkGfm]} />
+                </div>
             </Card>
             <Card sx={{ mx: 'auto' }}>
                 <Label>MarkDown Raw Text for {selectedMonth}</Label>
