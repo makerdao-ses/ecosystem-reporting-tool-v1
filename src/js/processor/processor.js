@@ -166,7 +166,6 @@ export default class Processor {
         this.updateFilter()
         this.parseRowData()
         // Filtering by currency
-        console.log(this.budgets)
         this.parsedRows = this.parsedRows.filter(row => {
             if (row.currency === this.currency) {
                 return row
@@ -175,8 +174,8 @@ export default class Processor {
         this.filterByMonth()
         this.filteredByCategoryMonth = this.buildSESView(this.parsedRows)
         this.leveledMonthsByCategory = this.buildSFView(this.filteredByCategoryMonth)
-        console.log('filteredByCategoryMonth', this.filteredByCategoryMonth)
-        console.log('leveledMonthsByCategory', this.leveledMonthsByCategory)
+        // console.log('filteredByCategoryMonth', this.filteredByCategoryMonth)
+        // console.log('leveledMonthsByCategory', this.leveledMonthsByCategory)
     }
 
     getRawData = (data) => {
