@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.1.0) - 2023-12-04
+
+### Fixed
+
+- Fix line item grouping bug when updating expense report
+
+### Added
+
+- Added group column in expense line items markdown table
+
 ## [2.0.5](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.0.5) - 2023-09-25
 
 ### Fixed

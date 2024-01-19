@@ -71,12 +71,13 @@ export default function LoginToApi() {
             let manyCuIds = [];
             const roles = extractRoleInfo(result);
             roles.map(role => {
-                if (role.name === facilitatorRole || role.name === delegatesRole || role.name === ecosystemActorRole || role.name === alignedDelegatesRole) {
+                if (role.name === facilitatorRole || role.name === ecosystemActorRole || role.name === alignedDelegatesRole) {
                     cuId = role.cuId
                     manyCuIds.push(role.cuId);
                 }
-                if (role.name === superAdminRole) {
+                if (role.name === superAdminRole || role.name === delegatesRole) {
                     cuId = null
+                    manyCuIds.push(null);
                 }
             })
             if (manyCuIds.length > 1) {
@@ -84,6 +85,7 @@ export default function LoginToApi() {
             }
             if (cuId !== undefined && roles.length > 0) {
                 const { data } = await getTeam(cuId);
+                const role = roles.find(role => role.name === delegatesRole);
                 dispatch(storeUserInfo({
                     id: result.data.userLogin.user.id,
                     cuId,
@@ -91,7 +93,7 @@ export default function LoginToApi() {
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
                     roles: roles,
-                    ownerType: data.teams[0].type
+                    ownerType: cuId ? data.teams[0].type : 'Delegates'
                 }));
                 electron.saveApiCredentials({
                     id: result.data.userLogin.user.id,
@@ -100,7 +102,7 @@ export default function LoginToApi() {
                     username: result.data.userLogin.user.username,
                     authToken: result.data.userLogin.authToken,
                     roles: roles,
-                    ownerType: data.teams[0].type
+                    ownerType: cuId ? data.teams[0].type : 'Delegates'
                 })
                 setusername('')
                 setPassword('')
