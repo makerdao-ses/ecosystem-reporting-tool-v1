@@ -152,7 +152,6 @@ export const addBudgetStatements = async (budgetStatements, authToken) => {
                 mutation BudgetStatementsBatchAdd($input: [BudgetStatementBatchAddInput]) {
                     budgetStatementsBatchAdd(input: $input) {
                             id
-                            ownerId
                             month
                             ownerType
                             budgetStatementWallet {
