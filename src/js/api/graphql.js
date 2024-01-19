@@ -99,7 +99,9 @@ export const getBudgetSatementInfo = async (ownerId, ownerType) => {
                 query BudgetStatement($filter: BudgetStatementFilter) {
                     budgetStatements(filter: $filter) {
                         id
-                        ownerId
+                        owner {
+                            id
+                        }
                         month
                         ownerType
                         budgetStatementWallet {
@@ -150,7 +152,6 @@ export const addBudgetStatements = async (budgetStatements, authToken) => {
                 mutation BudgetStatementsBatchAdd($input: [BudgetStatementBatchAddInput]) {
                     budgetStatementsBatchAdd(input: $input) {
                             id
-                            ownerId
                             month
                             ownerType
                             budgetStatementWallet {
