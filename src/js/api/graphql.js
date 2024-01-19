@@ -99,7 +99,9 @@ export const getBudgetSatementInfo = async (ownerId, ownerType) => {
                 query BudgetStatement($filter: BudgetStatementFilter) {
                     budgetStatements(filter: $filter) {
                         id
-                        ownerId
+                        owner {
+                            id
+                        }
                         month
                         ownerType
                         budgetStatementWallet {
