@@ -21,6 +21,8 @@ export const validateMonthsInApi = async (apiBudgetStatements, months, cu, input
     walletName = inputWalletName
     token = authToken
     ownerType = typeOfOwner
+    // removing last 3 months from spreadsheet to avoid uploading data for future months
+    spreadSheetMonths = spreadSheetMonths.slice(0, -3)
 
     statementMonths = budgetStatements.map(statement => {
         return statement.month;
