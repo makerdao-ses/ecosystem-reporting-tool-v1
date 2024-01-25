@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.1.2) - 2024-01-25
+
+### Fixed
+
+- Adjusted budget statement upload logic to remove adding future three months.
+
 ## [2.1.1](https://github.com/makerdao-ses/ecosystem-reporting-tool-v1/releases/tag/v2.1.1) - 2024-01-19
 
 ### Fixed
