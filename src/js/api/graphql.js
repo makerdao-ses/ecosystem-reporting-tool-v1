@@ -19,7 +19,10 @@ async function setupClient() {
                 isDev === false && isStaging === true && 'https://staging-ecosystem-dashboard.herokuapp.com/graphql'
         ,
         // uri: 'http://localhost:4000/graphql',
-        cache: new InMemoryCache()
+        cache: new InMemoryCache(),
+        headers: {
+            'no-cache': 'true'
+        }
     });
 }
 
