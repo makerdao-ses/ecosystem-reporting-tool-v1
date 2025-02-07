@@ -12,12 +12,13 @@ jobs:
       - name: Using Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.16.0
+          node-version: 22.13.1
       - name: Install Dependencies
-        run: npm install
+        run: |
+          npm install
       - name: Build App 
         run: npm run build
-      - name: Publish app
+      - name: Build Universal Binary
         run: npm run make:macos
         env:
           GH_TOKEN: ${{secrets.PUBLISH}}

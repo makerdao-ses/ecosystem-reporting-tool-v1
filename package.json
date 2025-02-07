@@ -10,11 +10,28 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "make:linux": "electron-builder --linux",
-    "make:macos": "electron-builder --mac",
+    "make:macos": "electron-forge make --platform darwin --arch universal",
     "make:win": "electron-builder --win --x64"
   },
   "author": "liberuum <liberuum@ses.makerdao.network>",
   "license": "ISC",
+  "config": {
+    "forge": {
+      "makers": [
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {}
+        }
+      ],
+      "packagerConfig": {
+        "arch": [
+          "x64",
+          "arm64"
+        ],
+        "icon": "./assets/images/icon.icns"
+      }
+    }
+  },
   "build": {
     "productName": "Budget-Tool",
     "appId": "com.liberuum.budgetTool",
@@ -70,6 +87,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
+    "@electron-forge/maker-dmg": "^7.6.1",
     "electron": "^21.2.0",
     "electron-builder": "^23.6.0",
     "electron-reload": "^2.0.0-alpha.1",
