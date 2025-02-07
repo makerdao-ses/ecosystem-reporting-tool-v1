@@ -14,7 +14,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
     const [comments, setComments] = useState([])
     const [preview, setPreview] = useState(false)
     const [withAuditor, setWithAuditor] = useState(false);
-    const [status, setStatus] = useState();
+    const [status, setStatus] = useState('Draft');
     const [editStatus, setEditStatus] = useState(false);
 
     const { enqueueSnackbar } = useSnackbar()
@@ -62,6 +62,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
             }
             const result = await createBudgetStatementComment(commentObj, userFromStore.authToken)
             setComments(prev => [...prev, result.data.budgetStatementCommentCreate[0]])
+            getComments()
             setInputText('')
             setPreview(false)
             enqueueSnackbar('Added new expense comment', { variant: 'success' })
@@ -105,7 +106,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
                                 columns={[2, '2fr 0.1fr']}
                             >
                                 <Text sx={{ fontWeight: 'bold' }}>{obj.author.username} wrote on {`${obj.timestamp?.substring(0, 10)} 
-                                ${obj.timestamp?.substring(11, 16)} UTC`} - {`${obj.status}`}</Text>
+                                ${obj.timestamp?.substring(11, 16)} UTC`} - {`${obj.status ? obj.status : status}`}</Text>
                                 {/* <Text sx={{position: 'right', color: 'red', cursor: 'pointer'}}>Delete</Text> */}
                             </Grid>
                             <ReactMarkdown children={obj.comment} remarkPlugins={[remarkGfm]} />
@@ -146,7 +147,7 @@ export default function BudgetStatementComment({ budgetStatementId, users }) {
                                 variant="smallOutline"
                                 onClick={handleEditStatus}
                             > Set status </Button>
-                            <Select disabled={!editStatus} size={'small'} onChange={e => handleSelect(e.target.value)} defaultValue={'Draft'}>
+                            <Select disabled={!editStatus} size={'small'} onChange={e => handleSelect(e.target.value)} value={status}>
                                 <option>Draft</option>
                                 {
                                     withAuditor ?

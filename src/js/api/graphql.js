@@ -47,8 +47,9 @@ export async function getTeams() {
                     shortCode
                     type
                  }
-            }
+            },
             `
+        , fetchPolicy: 'no-cache'
     });
     return cus;
 }
