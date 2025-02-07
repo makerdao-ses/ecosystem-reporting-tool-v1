@@ -1,6 +1,6 @@
 {
   "name": "budgettool",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Get monthly actuals in MD, JSON format and push to Ecosystem Performance Api",
   "main": "main.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "make:linux": "electron-builder --linux",
-    "make:macos": "electron-builder --mac",
+    "make:macos": "electron-builder --mac --universal",
     "make:win": "electron-builder --win --x64"
   },
   "author": "liberuum <liberuum@ses.makerdao.network>",
